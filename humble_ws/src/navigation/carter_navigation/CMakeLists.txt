@@ -10,4 +10,12 @@ install(DIRECTORY
   rviz2
   DESTINATION share/${PROJECT_NAME})
 
+# install the Python tag_id_logger node
+install(
+  PROGRAMS
+    scripts/tag_id_logger.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 ament_package()
+

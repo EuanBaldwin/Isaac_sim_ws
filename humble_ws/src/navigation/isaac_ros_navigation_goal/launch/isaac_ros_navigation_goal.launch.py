@@ -34,12 +34,12 @@ def generate_launch_description():
         parameters=[
             {
                 "map_yaml_path": map_yaml_file,
-                "iteration_count": 3,
-                "goal_generator_type": "RandomGoalGenerator",
+                "iteration_count": 6,
+                "goal_generator_type": "GoalReader",
                 "action_server_name": "navigate_to_pose",
                 "obstacle_search_distance_in_meters": 0.2,
                 "goal_text_file_path": goal_text_file,
-                "initial_pose": [-6.4, -1.04, 0.0, 0.0, 0.0, 0.99, 0.02],
+                "initial_pose": [-6.0, -1.0, 0.0, 0.0, 0.0, 1.0, 0.0],
             }
         ],
         output="screen",

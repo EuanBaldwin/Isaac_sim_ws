@@ -1,11 +1,11 @@
 amcl:
   ros__parameters:
     use_sim_time: True
-    alpha1: 0.01
-    alpha2: 0.005
-    alpha3: 0.01
-    alpha4: 0.005
-    alpha5: 0.01
+    alpha1: 0.2
+    alpha2: 0.2
+    alpha3: 0.2
+    alpha4: 0.2
+    alpha5: 0.2
     base_frame_id: "base_link"
     beam_skip_distance: 0.5
     beam_skip_error_threshold: 0.9
@@ -25,14 +25,14 @@ amcl:
     pf_z: 0.99
     recovery_alpha_fast: 0.0
     recovery_alpha_slow: 0.0
-    resample_interval: 1
+    resample_interval: 3
     robot_model_type: "nav2_amcl::DifferentialMotionModel"
     save_pose_rate: 0.5
     sigma_hit: 0.2
     tf_broadcast: true
     transform_tolerance: 1.0
-    update_min_a: 0.05
-    update_min_d: 0.05
+    update_min_a: 0.2
+    update_min_d: 0.25
     z_hit: 0.5
     z_max: 0.05
     z_rand: 0.5
@@ -138,8 +138,8 @@ controller_server:
     min_y_velocity_threshold: 0.5
     min_theta_velocity_threshold: 0.001
     failure_tolerance: 0.3
-    progress_checker_plugins: "progress_checker"
-    goal_checker_plugins: ["stopped_goal_checker"]
+    progress_checker_plugin: "progress_checker"
+    goal_checker_plugin: ["stopped_goal_checker"]
     controller_plugins: ["FollowPath"]
 
     # Progress checker parameters
@@ -151,7 +151,7 @@ controller_server:
     stopped_goal_checker:
       plugin: "nav2_controller::StoppedGoalChecker"
       xy_goal_tolerance: 0.25
-      yaw_goal_tolerance: 0.05
+      yaw_goal_tolerance: 0.25
       stateful: True
     # DWB parameters
     FollowPath:
@@ -175,9 +175,9 @@ controller_server:
       vy_samples: 5
       vtheta_samples: 20
       sim_time: 1.7
-      linear_granularity: 0.01
-      angular_granularity: 0.01
-      transform_tolerance: 0.1
+      linear_granularity: 0.05
+      angular_granularity: 0.025
+      transform_tolerance: 0.2
       xy_goal_tolerance: 0.25
       trans_stopped_velocity: 0.25
       short_circuit_trajectory_evaluation: True
@@ -201,8 +201,8 @@ controller_server_rclcpp_node:
 local_costmap:
   local_costmap:
     ros__parameters:
-      update_frequency: 10.0
-      publish_frequency: 5.0
+      update_frequency: 5.0
+      publish_frequency: 2.0
       footprint_padding: 0.25
       global_frame: odom
       robot_base_frame: base_link
@@ -211,7 +211,7 @@ local_costmap:
       width: 10
       height: 10
       resolution: 0.05
-      transform_tolerance: 0.1
+      transform_tolerance: 0.3
       footprint: "[ [0.14, 0.25], [0.14, -0.25], [-0.607, -0.25], [-0.607, 0.25] ]"
       plugins: ["hesai_voxel_layer", "front_rplidar_obstacle_layer", "back_rplidar_obstacle_layer", "inflation_layer"]
       # plugins: ["hesai_voxel_layer", "inflation_layer"]

@@ -18,6 +18,12 @@ from launch_ros.actions import Node
 def generate_launch_description():
 
     use_sim_time = LaunchConfiguration("use_sim_time", default="True")
+    
+    carter_description_launch_file = os.path.join(
+    	get_package_share_directory("carter_navigation"),
+        "launch",
+        "nova_carter_description_isaac_sim.launch.py",
+     )
 
     map_dir = LaunchConfiguration(
         "map",
@@ -31,6 +37,10 @@ def generate_launch_description():
         default=os.path.join(
             get_package_share_directory("carter_navigation"), "params", "carter_navigation_params.yaml"
         ),
+    )
+    
+    apriltag_launch_file = os.path.join(
+        get_package_share_directory("carter_navigation"), "launch", "apriltag.launch.py",
     )
 
 
@@ -46,6 +56,10 @@ def generate_launch_description():
             ),
             DeclareLaunchArgument(
                 "use_sim_time", default_value="true", description="Use simulation (Omniverse Isaac Sim) clock if true"
+            ),
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(carter_description_launch_file),
+                launch_arguments={"use_sim_time": use_sim_time}.items(),
             ),
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(os.path.join(nav2_bringup_launch_dir, "rviz_launch.py")),
@@ -76,6 +90,17 @@ def generate_launch_description():
                     # 'concurrency_level': 1,
                 }],
                 name='pointcloud_to_laserscan'
-            )
+            ),
+
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(apriltag_launch_file),
+            ),
+
+            Node(
+                package='carter_navigation',
+                executable='tag_id_logger.py',
+                name='tag_id_logger',
+                output='screen',
+            ),
         ]
     )
