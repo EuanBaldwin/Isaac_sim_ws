@@ -85,7 +85,7 @@ def generate_launch_description():
     return LaunchDescription(
         [
             # Declaring the Isaac Sim scene path. 'gui' launch argument is already used withing run_isaac_sim.launch.py
-            DeclareLaunchArgument("gui", default_value='~/Documents/inspection_robot.usd', description="Path to isaac sim scene"),
+            DeclareLaunchArgument("gui", default_value='~/Documents/IsaacSim-ros_workspaces/humble_ws/src/navigation/carter_navigation/maps/inspection_robot.usd', description="Path to isaac sim scene"),
 
             # Include Isaac Sim launch file from isaacsim package with given launch parameters.
             IncludeLaunchDescription(

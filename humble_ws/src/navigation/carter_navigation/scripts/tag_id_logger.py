@@ -15,7 +15,7 @@ class TagIdLogger(Node):
             10
         )
         self.seen_ids = set()
-        self.filepath = os.path.expanduser('~/Documents/detected_tags.txt')
+        self.filepath = os.path.expanduser('~/Documents/IsaacSim-ros_workspaces/humble_ws/src/navigation/carter_navigation/scripts/detected_tags.txt')
         self.get_logger().info(f"Logging new tag IDs to: {self.filepath}")
 
     def on_detections(self, msg: AprilTagDetectionArray):
