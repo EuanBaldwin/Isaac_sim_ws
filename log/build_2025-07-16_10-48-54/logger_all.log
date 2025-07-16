@@ -1,0 +1,463 @@
+[0.650s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'build']
+[0.650s] DEBUG:colcon:Parsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='build', build_base='build', install_base='install', merge_install=False, symlink_install=False, test_result_base=None, continue_on_error=False, executor='parallel', parallel_workers=8, event_handlers=None, ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['.'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=None, packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, allow_overriding=[], cmake_args=None, cmake_target=None, cmake_target_skip_unavailable=False, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, ament_cmake_args=None, catkin_cmake_args=None, catkin_skip_building_tests=False, verb_parser=<colcon_defaults.argument_parser.defaults.DefaultArgumentsDecorator object at 0x7688a3ed8dc0>, verb_extension=<colcon_core.verb.build.BuildVerb object at 0x7688a406a260>, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0x7688a406a260>>)
+[1.161s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[1.161s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[1.161s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[1.161s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[1.161s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) discover
+[1.161s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[1.161s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/ubuntu/Documents/IsaacSim-ros_workspaces'
+[1.161s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[1.161s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[1.161s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[1.161s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_pkg']
+[1.161s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_pkg'
+[1.162s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_meta']
+[1.162s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_meta'
+[1.162s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[1.162s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[1.176s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['cmake', 'python']
+[1.176s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'cmake'
+[1.176s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python'
+[1.176s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['python_setup_py']
+[1.176s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python_setup_py'
+[1.176s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extensions ['ignore', 'ignore_ament_install']
+[1.176s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extension 'ignore'
+[1.176s] Level 1:colcon.colcon_core.package_identification:_identify(build) ignored
+[1.177s] Level 1:colcon.colcon_core.package_identification:_identify(dockerfiles) by extensions ['ignore', 'ignore_ament_install']
+[1.177s] Level 1:colcon.colcon_core.package_identification:_identify(dockerfiles) by extension 'ignore'
+[1.177s] Level 1:colcon.colcon_core.package_identification:_identify(dockerfiles) by extension 'ignore_ament_install'
+[1.177s] Level 1:colcon.colcon_core.package_identification:_identify(dockerfiles) by extensions ['colcon_pkg']
+[1.177s] Level 1:colcon.colcon_core.package_identification:_identify(dockerfiles) by extension 'colcon_pkg'
+[1.177s] Level 1:colcon.colcon_core.package_identification:_identify(dockerfiles) by extensions ['colcon_meta']
+[1.177s] Level 1:colcon.colcon_core.package_identification:_identify(dockerfiles) by extension 'colcon_meta'
+[1.177s] Level 1:colcon.colcon_core.package_identification:_identify(dockerfiles) by extensions ['ros']
+[1.177s] Level 1:colcon.colcon_core.package_identification:_identify(dockerfiles) by extension 'ros'
+[1.177s] Level 1:colcon.colcon_core.package_identification:_identify(dockerfiles) by extensions ['cmake', 'python']
+[1.177s] Level 1:colcon.colcon_core.package_identification:_identify(dockerfiles) by extension 'cmake'
+[1.177s] Level 1:colcon.colcon_core.package_identification:_identify(dockerfiles) by extension 'python'
+[1.177s] Level 1:colcon.colcon_core.package_identification:_identify(dockerfiles) by extensions ['python_setup_py']
+[1.177s] Level 1:colcon.colcon_core.package_identification:_identify(dockerfiles) by extension 'python_setup_py'
+[1.178s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws) by extensions ['ignore', 'ignore_ament_install']
+[1.178s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws) by extension 'ignore'
+[1.178s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws) by extension 'ignore_ament_install'
+[1.178s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws) by extensions ['colcon_pkg']
+[1.178s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws) by extension 'colcon_pkg'
+[1.178s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws) by extensions ['colcon_meta']
+[1.178s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws) by extension 'colcon_meta'
+[1.178s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws) by extensions ['ros']
+[1.179s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws) by extension 'ros'
+[1.179s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws) by extensions ['cmake', 'python']
+[1.179s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws) by extension 'cmake'
+[1.179s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws) by extension 'python'
+[1.179s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws) by extensions ['python_setup_py']
+[1.179s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws) by extension 'python_setup_py'
+[1.180s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/build) by extensions ['ignore', 'ignore_ament_install']
+[1.180s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/build) by extension 'ignore'
+[1.180s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/build) ignored
+[1.180s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/install) by extensions ['ignore', 'ignore_ament_install']
+[1.180s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/install) by extension 'ignore'
+[1.180s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/install) ignored
+[1.181s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/log) by extensions ['ignore', 'ignore_ament_install']
+[1.181s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/log) by extension 'ignore'
+[1.181s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/log) ignored
+[1.182s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src) by extensions ['ignore', 'ignore_ament_install']
+[1.182s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src) by extension 'ignore'
+[1.182s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src) by extension 'ignore_ament_install'
+[1.182s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src) by extensions ['colcon_pkg']
+[1.182s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src) by extension 'colcon_pkg'
+[1.182s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src) by extensions ['colcon_meta']
+[1.182s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src) by extension 'colcon_meta'
+[1.182s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src) by extensions ['ros']
+[1.182s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src) by extension 'ros'
+[1.183s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src) by extensions ['cmake', 'python']
+[1.183s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src) by extension 'cmake'
+[1.183s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src) by extension 'python'
+[1.183s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src) by extensions ['python_setup_py']
+[1.183s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src) by extension 'python_setup_py'
+[1.183s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/ackermann_control) by extensions ['ignore', 'ignore_ament_install']
+[1.183s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/ackermann_control) by extension 'ignore'
+[1.183s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/ackermann_control) by extension 'ignore_ament_install'
+[1.184s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/ackermann_control) by extensions ['colcon_pkg']
+[1.184s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/ackermann_control) by extension 'colcon_pkg'
+[1.184s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/ackermann_control) by extensions ['colcon_meta']
+[1.184s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/ackermann_control) by extension 'colcon_meta'
+[1.184s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/ackermann_control) by extensions ['ros']
+[1.184s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/ackermann_control) by extension 'ros'
+[1.184s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/ackermann_control) by extensions ['cmake', 'python']
+[1.184s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/ackermann_control) by extension 'cmake'
+[1.184s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/ackermann_control) by extension 'python'
+[1.184s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/ackermann_control) by extensions ['python_setup_py']
+[1.184s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/ackermann_control) by extension 'python_setup_py'
+[1.185s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/ackermann_control/cmdvel_to_ackermann) by extensions ['ignore', 'ignore_ament_install']
+[1.185s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/ackermann_control/cmdvel_to_ackermann) by extension 'ignore'
+[1.185s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/ackermann_control/cmdvel_to_ackermann) by extension 'ignore_ament_install'
+[1.185s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/ackermann_control/cmdvel_to_ackermann) by extensions ['colcon_pkg']
+[1.185s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/ackermann_control/cmdvel_to_ackermann) by extension 'colcon_pkg'
+[1.185s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/ackermann_control/cmdvel_to_ackermann) by extensions ['colcon_meta']
+[1.185s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/ackermann_control/cmdvel_to_ackermann) by extension 'colcon_meta'
+[1.185s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/ackermann_control/cmdvel_to_ackermann) by extensions ['ros']
+[1.185s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/ackermann_control/cmdvel_to_ackermann) by extension 'ros'
+[1.190s] DEBUG:colcon.colcon_core.package_identification:Package 'humble_ws/src/ackermann_control/cmdvel_to_ackermann' with type 'ros.ament_cmake' and name 'cmdvel_to_ackermann'
+[1.190s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/custom_message) by extensions ['ignore', 'ignore_ament_install']
+[1.190s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/custom_message) by extension 'ignore'
+[1.190s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/custom_message) by extension 'ignore_ament_install'
+[1.191s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/custom_message) by extensions ['colcon_pkg']
+[1.191s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/custom_message) by extension 'colcon_pkg'
+[1.191s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/custom_message) by extensions ['colcon_meta']
+[1.191s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/custom_message) by extension 'colcon_meta'
+[1.191s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/custom_message) by extensions ['ros']
+[1.191s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/custom_message) by extension 'ros'
+[1.192s] DEBUG:colcon.colcon_core.package_identification:Package 'humble_ws/src/custom_message' with type 'ros.ament_cmake' and name 'custom_message'
+[1.193s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/humanoid_locomotion_policy_example) by extensions ['ignore', 'ignore_ament_install']
+[1.193s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/humanoid_locomotion_policy_example) by extension 'ignore'
+[1.193s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/humanoid_locomotion_policy_example) by extension 'ignore_ament_install'
+[1.193s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/humanoid_locomotion_policy_example) by extensions ['colcon_pkg']
+[1.193s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/humanoid_locomotion_policy_example) by extension 'colcon_pkg'
+[1.193s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/humanoid_locomotion_policy_example) by extensions ['colcon_meta']
+[1.193s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/humanoid_locomotion_policy_example) by extension 'colcon_meta'
+[1.193s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/humanoid_locomotion_policy_example) by extensions ['ros']
+[1.193s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/humanoid_locomotion_policy_example) by extension 'ros'
+[1.193s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/humanoid_locomotion_policy_example) by extensions ['cmake', 'python']
+[1.193s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/humanoid_locomotion_policy_example) by extension 'cmake'
+[1.193s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/humanoid_locomotion_policy_example) by extension 'python'
+[1.193s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/humanoid_locomotion_policy_example) by extensions ['python_setup_py']
+[1.193s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/humanoid_locomotion_policy_example) by extension 'python_setup_py'
+[1.194s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/humanoid_locomotion_policy_example/h1_fullbody_controller) by extensions ['ignore', 'ignore_ament_install']
+[1.194s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/humanoid_locomotion_policy_example/h1_fullbody_controller) by extension 'ignore'
+[1.194s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/humanoid_locomotion_policy_example/h1_fullbody_controller) by extension 'ignore_ament_install'
+[1.194s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/humanoid_locomotion_policy_example/h1_fullbody_controller) by extensions ['colcon_pkg']
+[1.194s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/humanoid_locomotion_policy_example/h1_fullbody_controller) by extension 'colcon_pkg'
+[1.194s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/humanoid_locomotion_policy_example/h1_fullbody_controller) by extensions ['colcon_meta']
+[1.194s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/humanoid_locomotion_policy_example/h1_fullbody_controller) by extension 'colcon_meta'
+[1.194s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/humanoid_locomotion_policy_example/h1_fullbody_controller) by extensions ['ros']
+[1.194s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/humanoid_locomotion_policy_example/h1_fullbody_controller) by extension 'ros'
+[1.196s] DEBUG:colcon.colcon_core.package_identification:Package 'humble_ws/src/humanoid_locomotion_policy_example/h1_fullbody_controller' with type 'ros.ament_cmake' and name 'h1_fullbody_controller'
+[1.196s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/isaac_ros2_messages) by extensions ['ignore', 'ignore_ament_install']
+[1.196s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/isaac_ros2_messages) by extension 'ignore'
+[1.196s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/isaac_ros2_messages) by extension 'ignore_ament_install'
+[1.196s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/isaac_ros2_messages) by extensions ['colcon_pkg']
+[1.196s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/isaac_ros2_messages) by extension 'colcon_pkg'
+[1.197s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/isaac_ros2_messages) by extensions ['colcon_meta']
+[1.197s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/isaac_ros2_messages) by extension 'colcon_meta'
+[1.197s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/isaac_ros2_messages) by extensions ['ros']
+[1.197s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/isaac_ros2_messages) by extension 'ros'
+[1.198s] DEBUG:colcon.colcon_core.package_identification:Package 'humble_ws/src/isaac_ros2_messages' with type 'ros.ament_cmake' and name 'isaac_ros2_messages'
+[1.198s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/isaac_tutorials) by extensions ['ignore', 'ignore_ament_install']
+[1.199s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/isaac_tutorials) by extension 'ignore'
+[1.199s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/isaac_tutorials) by extension 'ignore_ament_install'
+[1.199s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/isaac_tutorials) by extensions ['colcon_pkg']
+[1.199s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/isaac_tutorials) by extension 'colcon_pkg'
+[1.199s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/isaac_tutorials) by extensions ['colcon_meta']
+[1.199s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/isaac_tutorials) by extension 'colcon_meta'
+[1.199s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/isaac_tutorials) by extensions ['ros']
+[1.199s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/isaac_tutorials) by extension 'ros'
+[1.201s] DEBUG:colcon.colcon_core.package_identification:Package 'humble_ws/src/isaac_tutorials' with type 'ros.ament_cmake' and name 'isaac_tutorials'
+[1.201s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/isaacsim) by extensions ['ignore', 'ignore_ament_install']
+[1.201s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/isaacsim) by extension 'ignore'
+[1.201s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/isaacsim) by extension 'ignore_ament_install'
+[1.202s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/isaacsim) by extensions ['colcon_pkg']
+[1.202s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/isaacsim) by extension 'colcon_pkg'
+[1.202s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/isaacsim) by extensions ['colcon_meta']
+[1.202s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/isaacsim) by extension 'colcon_meta'
+[1.202s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/isaacsim) by extensions ['ros']
+[1.202s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/isaacsim) by extension 'ros'
+[1.203s] DEBUG:colcon.colcon_core.package_identification:Package 'humble_ws/src/isaacsim' with type 'ros.ament_cmake' and name 'isaacsim'
+[1.204s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/moveit) by extensions ['ignore', 'ignore_ament_install']
+[1.204s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/moveit) by extension 'ignore'
+[1.204s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/moveit) by extension 'ignore_ament_install'
+[1.204s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/moveit) by extensions ['colcon_pkg']
+[1.204s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/moveit) by extension 'colcon_pkg'
+[1.204s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/moveit) by extensions ['colcon_meta']
+[1.204s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/moveit) by extension 'colcon_meta'
+[1.204s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/moveit) by extensions ['ros']
+[1.204s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/moveit) by extension 'ros'
+[1.204s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/moveit) by extensions ['cmake', 'python']
+[1.204s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/moveit) by extension 'cmake'
+[1.204s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/moveit) by extension 'python'
+[1.204s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/moveit) by extensions ['python_setup_py']
+[1.204s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/moveit) by extension 'python_setup_py'
+[1.205s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/moveit/isaac_moveit) by extensions ['ignore', 'ignore_ament_install']
+[1.205s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/moveit/isaac_moveit) by extension 'ignore'
+[1.205s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/moveit/isaac_moveit) by extension 'ignore_ament_install'
+[1.205s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/moveit/isaac_moveit) by extensions ['colcon_pkg']
+[1.205s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/moveit/isaac_moveit) by extension 'colcon_pkg'
+[1.205s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/moveit/isaac_moveit) by extensions ['colcon_meta']
+[1.205s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/moveit/isaac_moveit) by extension 'colcon_meta'
+[1.205s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/moveit/isaac_moveit) by extensions ['ros']
+[1.205s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/moveit/isaac_moveit) by extension 'ros'
+[1.206s] DEBUG:colcon.colcon_core.package_identification:Package 'humble_ws/src/moveit/isaac_moveit' with type 'ros.ament_cmake' and name 'isaac_moveit'
+[1.207s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation) by extensions ['ignore', 'ignore_ament_install']
+[1.207s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation) by extension 'ignore'
+[1.207s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation) by extension 'ignore_ament_install'
+[1.208s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation) by extensions ['colcon_pkg']
+[1.208s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation) by extension 'colcon_pkg'
+[1.208s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation) by extensions ['colcon_meta']
+[1.208s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation) by extension 'colcon_meta'
+[1.208s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation) by extensions ['ros']
+[1.208s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation) by extension 'ros'
+[1.208s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation) by extensions ['cmake', 'python']
+[1.208s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation) by extension 'cmake'
+[1.208s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation) by extension 'python'
+[1.208s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation) by extensions ['python_setup_py']
+[1.208s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation) by extension 'python_setup_py'
+[1.209s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation/carter_navigation) by extensions ['ignore', 'ignore_ament_install']
+[1.209s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation/carter_navigation) by extension 'ignore'
+[1.209s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation/carter_navigation) by extension 'ignore_ament_install'
+[1.209s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation/carter_navigation) by extensions ['colcon_pkg']
+[1.209s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation/carter_navigation) by extension 'colcon_pkg'
+[1.209s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation/carter_navigation) by extensions ['colcon_meta']
+[1.209s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation/carter_navigation) by extension 'colcon_meta'
+[1.209s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation/carter_navigation) by extensions ['ros']
+[1.209s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation/carter_navigation) by extension 'ros'
+[1.210s] DEBUG:colcon.colcon_core.package_identification:Package 'humble_ws/src/navigation/carter_navigation' with type 'ros.ament_cmake' and name 'carter_navigation'
+[1.211s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation/isaac_ros_navigation_goal) by extensions ['ignore', 'ignore_ament_install']
+[1.211s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation/isaac_ros_navigation_goal) by extension 'ignore'
+[1.211s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation/isaac_ros_navigation_goal) by extension 'ignore_ament_install'
+[1.211s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation/isaac_ros_navigation_goal) by extensions ['colcon_pkg']
+[1.211s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation/isaac_ros_navigation_goal) by extension 'colcon_pkg'
+[1.211s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation/isaac_ros_navigation_goal) by extensions ['colcon_meta']
+[1.211s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation/isaac_ros_navigation_goal) by extension 'colcon_meta'
+[1.211s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation/isaac_ros_navigation_goal) by extensions ['ros']
+[1.211s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation/isaac_ros_navigation_goal) by extension 'ros'
+[1.213s] DEBUG:colcon.colcon_core.package_identification:Package 'humble_ws/src/navigation/isaac_ros_navigation_goal' with type 'ros.ament_python' and name 'isaac_ros_navigation_goal'
+[1.213s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation/iw_hub_navigation) by extensions ['ignore', 'ignore_ament_install']
+[1.221s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation/iw_hub_navigation) by extension 'ignore'
+[1.221s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation/iw_hub_navigation) by extension 'ignore_ament_install'
+[1.221s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation/iw_hub_navigation) by extensions ['colcon_pkg']
+[1.221s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation/iw_hub_navigation) by extension 'colcon_pkg'
+[1.221s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation/iw_hub_navigation) by extensions ['colcon_meta']
+[1.221s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation/iw_hub_navigation) by extension 'colcon_meta'
+[1.221s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation/iw_hub_navigation) by extensions ['ros']
+[1.221s] Level 1:colcon.colcon_core.package_identification:_identify(humble_ws/src/navigation/iw_hub_navigation) by extension 'ros'
+[1.223s] DEBUG:colcon.colcon_core.package_identification:Package 'humble_ws/src/navigation/iw_hub_navigation' with type 'ros.ament_cmake' and name 'iw_hub_navigation'
+[1.223s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extensions ['ignore', 'ignore_ament_install']
+[1.223s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extension 'ignore'
+[1.223s] Level 1:colcon.colcon_core.package_identification:_identify(install) ignored
+[1.224s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws) by extensions ['ignore', 'ignore_ament_install']
+[1.224s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws) by extension 'ignore'
+[1.224s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws) by extension 'ignore_ament_install'
+[1.224s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws) by extensions ['colcon_pkg']
+[1.224s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws) by extension 'colcon_pkg'
+[1.224s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws) by extensions ['colcon_meta']
+[1.224s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws) by extension 'colcon_meta'
+[1.224s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws) by extensions ['ros']
+[1.224s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws) by extension 'ros'
+[1.224s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws) by extensions ['cmake', 'python']
+[1.224s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws) by extension 'cmake'
+[1.224s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws) by extension 'python'
+[1.224s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws) by extensions ['python_setup_py']
+[1.224s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws) by extension 'python_setup_py'
+[1.225s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src) by extensions ['ignore', 'ignore_ament_install']
+[1.225s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src) by extension 'ignore'
+[1.225s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src) by extension 'ignore_ament_install'
+[1.225s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src) by extensions ['colcon_pkg']
+[1.225s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src) by extension 'colcon_pkg'
+[1.225s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src) by extensions ['colcon_meta']
+[1.225s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src) by extension 'colcon_meta'
+[1.225s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src) by extensions ['ros']
+[1.225s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src) by extension 'ros'
+[1.225s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src) by extensions ['cmake', 'python']
+[1.225s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src) by extension 'cmake'
+[1.225s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src) by extension 'python'
+[1.226s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src) by extensions ['python_setup_py']
+[1.226s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src) by extension 'python_setup_py'
+[1.226s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/ackermann_control) by extensions ['ignore', 'ignore_ament_install']
+[1.226s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/ackermann_control) by extension 'ignore'
+[1.226s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/ackermann_control) by extension 'ignore_ament_install'
+[1.226s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/ackermann_control) by extensions ['colcon_pkg']
+[1.226s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/ackermann_control) by extension 'colcon_pkg'
+[1.227s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/ackermann_control) by extensions ['colcon_meta']
+[1.227s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/ackermann_control) by extension 'colcon_meta'
+[1.227s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/ackermann_control) by extensions ['ros']
+[1.227s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/ackermann_control) by extension 'ros'
+[1.227s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/ackermann_control) by extensions ['cmake', 'python']
+[1.227s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/ackermann_control) by extension 'cmake'
+[1.227s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/ackermann_control) by extension 'python'
+[1.227s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/ackermann_control) by extensions ['python_setup_py']
+[1.227s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/ackermann_control) by extension 'python_setup_py'
+[1.228s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/ackermann_control/cmdvel_to_ackermann) by extensions ['ignore', 'ignore_ament_install']
+[1.228s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/ackermann_control/cmdvel_to_ackermann) by extension 'ignore'
+[1.228s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/ackermann_control/cmdvel_to_ackermann) by extension 'ignore_ament_install'
+[1.228s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/ackermann_control/cmdvel_to_ackermann) by extensions ['colcon_pkg']
+[1.228s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/ackermann_control/cmdvel_to_ackermann) by extension 'colcon_pkg'
+[1.228s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/ackermann_control/cmdvel_to_ackermann) by extensions ['colcon_meta']
+[1.228s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/ackermann_control/cmdvel_to_ackermann) by extension 'colcon_meta'
+[1.228s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/ackermann_control/cmdvel_to_ackermann) by extensions ['ros']
+[1.228s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/ackermann_control/cmdvel_to_ackermann) by extension 'ros'
+[1.229s] DEBUG:colcon.colcon_core.package_identification:Package 'jazzy_ws/src/ackermann_control/cmdvel_to_ackermann' with type 'ros.ament_cmake' and name 'cmdvel_to_ackermann'
+[1.230s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/custom_message) by extensions ['ignore', 'ignore_ament_install']
+[1.230s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/custom_message) by extension 'ignore'
+[1.230s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/custom_message) by extension 'ignore_ament_install'
+[1.230s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/custom_message) by extensions ['colcon_pkg']
+[1.230s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/custom_message) by extension 'colcon_pkg'
+[1.230s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/custom_message) by extensions ['colcon_meta']
+[1.230s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/custom_message) by extension 'colcon_meta'
+[1.230s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/custom_message) by extensions ['ros']
+[1.230s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/custom_message) by extension 'ros'
+[1.231s] DEBUG:colcon.colcon_core.package_identification:Package 'jazzy_ws/src/custom_message' with type 'ros.ament_cmake' and name 'custom_message'
+[1.232s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/humanoid_locomotion_policy_example) by extensions ['ignore', 'ignore_ament_install']
+[1.232s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/humanoid_locomotion_policy_example) by extension 'ignore'
+[1.232s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/humanoid_locomotion_policy_example) by extension 'ignore_ament_install'
+[1.232s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/humanoid_locomotion_policy_example) by extensions ['colcon_pkg']
+[1.232s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/humanoid_locomotion_policy_example) by extension 'colcon_pkg'
+[1.232s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/humanoid_locomotion_policy_example) by extensions ['colcon_meta']
+[1.232s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/humanoid_locomotion_policy_example) by extension 'colcon_meta'
+[1.232s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/humanoid_locomotion_policy_example) by extensions ['ros']
+[1.232s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/humanoid_locomotion_policy_example) by extension 'ros'
+[1.232s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/humanoid_locomotion_policy_example) by extensions ['cmake', 'python']
+[1.232s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/humanoid_locomotion_policy_example) by extension 'cmake'
+[1.232s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/humanoid_locomotion_policy_example) by extension 'python'
+[1.233s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/humanoid_locomotion_policy_example) by extensions ['python_setup_py']
+[1.233s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/humanoid_locomotion_policy_example) by extension 'python_setup_py'
+[1.233s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/humanoid_locomotion_policy_example/h1_fullbody_controller) by extensions ['ignore', 'ignore_ament_install']
+[1.233s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/humanoid_locomotion_policy_example/h1_fullbody_controller) by extension 'ignore'
+[1.233s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/humanoid_locomotion_policy_example/h1_fullbody_controller) by extension 'ignore_ament_install'
+[1.233s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/humanoid_locomotion_policy_example/h1_fullbody_controller) by extensions ['colcon_pkg']
+[1.233s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/humanoid_locomotion_policy_example/h1_fullbody_controller) by extension 'colcon_pkg'
+[1.233s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/humanoid_locomotion_policy_example/h1_fullbody_controller) by extensions ['colcon_meta']
+[1.233s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/humanoid_locomotion_policy_example/h1_fullbody_controller) by extension 'colcon_meta'
+[1.234s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/humanoid_locomotion_policy_example/h1_fullbody_controller) by extensions ['ros']
+[1.234s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/humanoid_locomotion_policy_example/h1_fullbody_controller) by extension 'ros'
+[1.235s] DEBUG:colcon.colcon_core.package_identification:Package 'jazzy_ws/src/humanoid_locomotion_policy_example/h1_fullbody_controller' with type 'ros.ament_cmake' and name 'h1_fullbody_controller'
+[1.236s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/isaac_ros2_messages) by extensions ['ignore', 'ignore_ament_install']
+[1.236s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/isaac_ros2_messages) by extension 'ignore'
+[1.236s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/isaac_ros2_messages) by extension 'ignore_ament_install'
+[1.236s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/isaac_ros2_messages) by extensions ['colcon_pkg']
+[1.236s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/isaac_ros2_messages) by extension 'colcon_pkg'
+[1.236s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/isaac_ros2_messages) by extensions ['colcon_meta']
+[1.236s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/isaac_ros2_messages) by extension 'colcon_meta'
+[1.236s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/isaac_ros2_messages) by extensions ['ros']
+[1.236s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/isaac_ros2_messages) by extension 'ros'
+[1.237s] DEBUG:colcon.colcon_core.package_identification:Package 'jazzy_ws/src/isaac_ros2_messages' with type 'ros.ament_cmake' and name 'isaac_ros2_messages'
+[1.238s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/isaac_tutorials) by extensions ['ignore', 'ignore_ament_install']
+[1.238s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/isaac_tutorials) by extension 'ignore'
+[1.238s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/isaac_tutorials) by extension 'ignore_ament_install'
+[1.238s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/isaac_tutorials) by extensions ['colcon_pkg']
+[1.238s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/isaac_tutorials) by extension 'colcon_pkg'
+[1.238s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/isaac_tutorials) by extensions ['colcon_meta']
+[1.238s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/isaac_tutorials) by extension 'colcon_meta'
+[1.238s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/isaac_tutorials) by extensions ['ros']
+[1.238s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/isaac_tutorials) by extension 'ros'
+[1.239s] DEBUG:colcon.colcon_core.package_identification:Package 'jazzy_ws/src/isaac_tutorials' with type 'ros.ament_cmake' and name 'isaac_tutorials'
+[1.240s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/isaacsim) by extensions ['ignore', 'ignore_ament_install']
+[1.240s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/isaacsim) by extension 'ignore'
+[1.240s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/isaacsim) by extension 'ignore_ament_install'
+[1.240s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/isaacsim) by extensions ['colcon_pkg']
+[1.240s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/isaacsim) by extension 'colcon_pkg'
+[1.240s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/isaacsim) by extensions ['colcon_meta']
+[1.240s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/isaacsim) by extension 'colcon_meta'
+[1.240s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/isaacsim) by extensions ['ros']
+[1.240s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/isaacsim) by extension 'ros'
+[1.241s] DEBUG:colcon.colcon_core.package_identification:Package 'jazzy_ws/src/isaacsim' with type 'ros.ament_cmake' and name 'isaacsim'
+[1.242s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/moveit) by extensions ['ignore', 'ignore_ament_install']
+[1.242s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/moveit) by extension 'ignore'
+[1.242s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/moveit) by extension 'ignore_ament_install'
+[1.242s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/moveit) by extensions ['colcon_pkg']
+[1.242s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/moveit) by extension 'colcon_pkg'
+[1.242s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/moveit) by extensions ['colcon_meta']
+[1.242s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/moveit) by extension 'colcon_meta'
+[1.242s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/moveit) by extensions ['ros']
+[1.243s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/moveit) by extension 'ros'
+[1.243s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/moveit) by extensions ['cmake', 'python']
+[1.243s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/moveit) by extension 'cmake'
+[1.243s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/moveit) by extension 'python'
+[1.243s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/moveit) by extensions ['python_setup_py']
+[1.243s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/moveit) by extension 'python_setup_py'
+[1.243s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/moveit/isaac_moveit) by extensions ['ignore', 'ignore_ament_install']
+[1.244s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/moveit/isaac_moveit) by extension 'ignore'
+[1.244s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/moveit/isaac_moveit) by extension 'ignore_ament_install'
+[1.244s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/moveit/isaac_moveit) by extensions ['colcon_pkg']
+[1.244s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/moveit/isaac_moveit) by extension 'colcon_pkg'
+[1.244s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/moveit/isaac_moveit) by extensions ['colcon_meta']
+[1.244s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/moveit/isaac_moveit) by extension 'colcon_meta'
+[1.244s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/moveit/isaac_moveit) by extensions ['ros']
+[1.244s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/moveit/isaac_moveit) by extension 'ros'
+[1.245s] DEBUG:colcon.colcon_core.package_identification:Package 'jazzy_ws/src/moveit/isaac_moveit' with type 'ros.ament_cmake' and name 'isaac_moveit'
+[1.246s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation) by extensions ['ignore', 'ignore_ament_install']
+[1.246s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation) by extension 'ignore'
+[1.246s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation) by extension 'ignore_ament_install'
+[1.246s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation) by extensions ['colcon_pkg']
+[1.246s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation) by extension 'colcon_pkg'
+[1.246s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation) by extensions ['colcon_meta']
+[1.246s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation) by extension 'colcon_meta'
+[1.246s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation) by extensions ['ros']
+[1.246s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation) by extension 'ros'
+[1.246s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation) by extensions ['cmake', 'python']
+[1.246s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation) by extension 'cmake'
+[1.246s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation) by extension 'python'
+[1.246s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation) by extensions ['python_setup_py']
+[1.246s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation) by extension 'python_setup_py'
+[1.247s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation/carter_navigation) by extensions ['ignore', 'ignore_ament_install']
+[1.247s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation/carter_navigation) by extension 'ignore'
+[1.247s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation/carter_navigation) by extension 'ignore_ament_install'
+[1.247s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation/carter_navigation) by extensions ['colcon_pkg']
+[1.247s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation/carter_navigation) by extension 'colcon_pkg'
+[1.247s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation/carter_navigation) by extensions ['colcon_meta']
+[1.247s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation/carter_navigation) by extension 'colcon_meta'
+[1.247s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation/carter_navigation) by extensions ['ros']
+[1.247s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation/carter_navigation) by extension 'ros'
+[1.249s] DEBUG:colcon.colcon_core.package_identification:Package 'jazzy_ws/src/navigation/carter_navigation' with type 'ros.ament_cmake' and name 'carter_navigation'
+[1.250s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation/isaac_ros_navigation_goal) by extensions ['ignore', 'ignore_ament_install']
+[1.250s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation/isaac_ros_navigation_goal) by extension 'ignore'
+[1.250s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation/isaac_ros_navigation_goal) by extension 'ignore_ament_install'
+[1.250s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation/isaac_ros_navigation_goal) by extensions ['colcon_pkg']
+[1.250s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation/isaac_ros_navigation_goal) by extension 'colcon_pkg'
+[1.250s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation/isaac_ros_navigation_goal) by extensions ['colcon_meta']
+[1.250s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation/isaac_ros_navigation_goal) by extension 'colcon_meta'
+[1.250s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation/isaac_ros_navigation_goal) by extensions ['ros']
+[1.250s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation/isaac_ros_navigation_goal) by extension 'ros'
+[1.251s] DEBUG:colcon.colcon_core.package_identification:Package 'jazzy_ws/src/navigation/isaac_ros_navigation_goal' with type 'ros.ament_python' and name 'isaac_ros_navigation_goal'
+[1.252s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation/iw_hub_navigation) by extensions ['ignore', 'ignore_ament_install']
+[1.252s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation/iw_hub_navigation) by extension 'ignore'
+[1.252s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation/iw_hub_navigation) by extension 'ignore_ament_install'
+[1.252s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation/iw_hub_navigation) by extensions ['colcon_pkg']
+[1.252s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation/iw_hub_navigation) by extension 'colcon_pkg'
+[1.252s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation/iw_hub_navigation) by extensions ['colcon_meta']
+[1.252s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation/iw_hub_navigation) by extension 'colcon_meta'
+[1.252s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation/iw_hub_navigation) by extensions ['ros']
+[1.252s] Level 1:colcon.colcon_core.package_identification:_identify(jazzy_ws/src/navigation/iw_hub_navigation) by extension 'ros'
+[1.254s] DEBUG:colcon.colcon_core.package_identification:Package 'jazzy_ws/src/navigation/iw_hub_navigation' with type 'ros.ament_cmake' and name 'iw_hub_navigation'
+[1.254s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extensions ['ignore', 'ignore_ament_install']
+[1.254s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extension 'ignore'
+[1.254s] Level 1:colcon.colcon_core.package_identification:_identify(log) ignored
+[1.254s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[1.254s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) discover
+[1.254s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) using defaults
+[1.254s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[1.254s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults
+[1.308s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) check parameters
+[1.308s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) discover
+[1.316s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 472 installed packages in /opt/ros/humble
+[1.318s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) using defaults
+[1.369s] ERROR:colcon:colcon build: Duplicate package names not supported:
+- carter_navigation:
+  - humble_ws/src/navigation/carter_navigation
+  - jazzy_ws/src/navigation/carter_navigation
+- cmdvel_to_ackermann:
+  - humble_ws/src/ackermann_control/cmdvel_to_ackermann
+  - jazzy_ws/src/ackermann_control/cmdvel_to_ackermann
+- custom_message:
+  - humble_ws/src/custom_message
+  - jazzy_ws/src/custom_message
+- h1_fullbody_controller:
+  - humble_ws/src/humanoid_locomotion_policy_example/h1_fullbody_controller
+  - jazzy_ws/src/humanoid_locomotion_policy_example/h1_fullbody_controller
+- isaac_moveit:
+  - humble_ws/src/moveit/isaac_moveit
+  - jazzy_ws/src/moveit/isaac_moveit
+- isaac_ros2_messages:
+  - humble_ws/src/isaac_ros2_messages
+  - jazzy_ws/src/isaac_ros2_messages
+- isaac_ros_navigation_goal:
+  - humble_ws/src/navigation/isaac_ros_navigation_goal
+  - jazzy_ws/src/navigation/isaac_ros_navigation_goal
+- isaac_tutorials:
+  - humble_ws/src/isaac_tutorials
+  - jazzy_ws/src/isaac_tutorials
+- isaacsim:
+  - humble_ws/src/isaacsim
+  - jazzy_ws/src/isaacsim
+- iw_hub_navigation:
+  - humble_ws/src/navigation/iw_hub_navigation
+  - jazzy_ws/src/navigation/iw_hub_navigation

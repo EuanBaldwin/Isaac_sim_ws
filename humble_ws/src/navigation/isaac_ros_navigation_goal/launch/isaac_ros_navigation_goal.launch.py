@@ -39,7 +39,7 @@ def generate_launch_description():
                 "action_server_name": "navigate_to_pose",
                 "obstacle_search_distance_in_meters": 0.2,
                 "goal_text_file_path": goal_text_file,
-                "initial_pose": [-6.0, -1.0, 0.0, 0.0, 0.0, 1.0, 0.0],
+                "initial_pose": [4.2, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0],
             }
         ],
         output="screen",

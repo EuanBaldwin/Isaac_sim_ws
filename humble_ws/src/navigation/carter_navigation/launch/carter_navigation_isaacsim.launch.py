@@ -21,6 +21,7 @@ def generate_launch_description():
 
     use_sim_time = LaunchConfiguration("use_sim_time", default="True")
     
+    # enables visualisation of carter's meshes in rviz
 #    carter_description_launch_file = os.path.join(
 #    	get_package_share_directory("carter_navigation"), "launch", "nova_carter_description_isaac_sim.launch.py",
 #     )
@@ -78,7 +79,7 @@ def generate_launch_description():
             
             # If Nav2 takes additional time to initialize, uncomment the lines below to add a delay of 10 seconds (or any desired duration) before launching the second_node_action
             import time
-            time.sleep(5)
+            time.sleep(10)
             return second_node_action
 
 

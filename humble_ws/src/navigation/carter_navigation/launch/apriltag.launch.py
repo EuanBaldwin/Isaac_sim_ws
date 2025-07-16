@@ -15,9 +15,12 @@ def generate_launch_description():
             ('camera_info', '/front_stereo_camera/left/camera_info'),
         ],
         parameters=[{
-            'size': 0.5,
+            'size': 0.25,
             'max_tags': 588,
-            'tile_size': 4,
+            'tile_size': 2,
+            'tag_family': 'tag36h11',
+            'max_hamming': 0,
+            'decision_margin_thresh': 50.0,
         }]
     )
 
