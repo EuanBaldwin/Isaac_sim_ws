@@ -20,11 +20,6 @@ from launch.substitutions import FindExecutable
 def generate_launch_description():
 
     use_sim_time = LaunchConfiguration("use_sim_time", default="True")
-    
-    # enables visualisation of carter's meshes in rviz
-#    carter_description_launch_file = os.path.join(
-#    	get_package_share_directory("carter_navigation"), "launch", "nova_carter_description_isaac_sim.launch.py",
-#     )
 
     map_dir = LaunchConfiguration(
         "map",
@@ -121,10 +116,6 @@ def generate_launch_description():
             DeclareLaunchArgument(
                 "use_sim_time", default_value="true", description="Use simulation (Omniverse Isaac Sim) clock if true"
             ),
-#            IncludeLaunchDescription(
-#                PythonLaunchDescriptionSource(carter_description_launch_file),
-#                launch_arguments={"use_sim_time": use_sim_time}.items(),
-#            ),
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(os.path.join(nav2_bringup_launch_dir, "rviz_launch.py")),
                 launch_arguments={"namespace": "", "use_namespace": "False", "rviz_config": rviz_config_dir}.items(),
@@ -163,6 +154,6 @@ def generate_launch_description():
             ),
             ld_apriltag,
             tag_id_logger_node,
-            docking_server,
+            #docking_server,
         ]
     )
