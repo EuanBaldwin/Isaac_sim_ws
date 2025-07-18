@@ -42,12 +42,9 @@ def generate_launch_description():
 
 
     nav2_bringup_launch_dir = os.path.join(get_package_share_directory("nav2_bringup"), "launch")
-
     rviz_config_dir = os.path.join(get_package_share_directory("carter_navigation"), "rviz2", "carter_navigation.rviz")
-    
-    apriltag_launch_file = os.path.join(
-        get_package_share_directory("carter_navigation"), "launch", "apriltag.launch.py"
-    )
+    docking_params = os.path.join(get_package_share_directory("carter_navigation"), "params", "carter_docking.yaml")
+    apriltag_launch_file = os.path.join(get_package_share_directory("carter_navigation"), "launch", "apriltag.launch.py")
 
     ld_apriltag = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([apriltag_launch_file]),
@@ -58,6 +55,15 @@ def generate_launch_description():
         executable="tag_id_logger.py",
         name="tag_id_logger",
         output="screen",
+    )
+    
+    docking_server = Node(
+    	package="opennav_docking",
+    	executable="opennav_docking",
+    	name="docking_server",
+    	output="screen",
+    	parameters=[docking_params,
+        	{'use_sim_time': use_sim_time}],
     )
 
     ld_automatic_goal = IncludeLaunchDescription(
@@ -157,5 +163,6 @@ def generate_launch_description():
             ),
             ld_apriltag,
             tag_id_logger_node,
+            docking_server,
         ]
     )
