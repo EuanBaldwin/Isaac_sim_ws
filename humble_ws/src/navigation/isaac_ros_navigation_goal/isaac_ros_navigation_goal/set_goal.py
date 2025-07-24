@@ -2,13 +2,12 @@ import rclpy
 from rclpy.action import ActionClient
 from rclpy.node import Node
 from nav2_msgs.action import NavigateToPose
+from std_srvs.srv import Empty
 from .obstacle_map import GridMap
 from .goal_generators import RandomGoalGenerator, GoalReader
 import sys
 from geometry_msgs.msg import PoseWithCovarianceStamped
 import time
-import csv
-import datetime  # NEW – for wall‑time‑based file naming
 
 
 class SetNavigationGoal(Node):
@@ -29,55 +28,34 @@ class SetNavigationGoal(Node):
             ],
         )
 
-        # --- CSV writer -----------------------------------------------------
-        wall_stamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        self._csv_file_path = f"/tmp/nav_feedback_{wall_stamp}.csv"
-        self._csv_file = open(self._csv_file_path, "w", newline="")
-        self._csv_writer = csv.writer(self._csv_file)
-        self._csv_writer.writerow(
-            [
-                "sim_time_s",  # clock() time, works in simulation
-                "x_m",
-                "y_m",
-                "distance_left_m",
-                "eta_s",
-                "nav_time_s",
-                "recoveries",
-                "goal_status",  # SUCCEEDED | FAILED written once per goal
-            ]
-        )
-        # --------------------------------------------------------------------
-
         self.__goal_generator = self.__create_goal_generator()
         action_server_name = self.get_parameter("action_server_name").value
         self._action_client = ActionClient(self, NavigateToPose, action_server_name)
+
+        # Tag‑ID‑logger reset service client (used only once at the end)
+        self._reset_cli = self.create_client(Empty, '/reset_tag_id_log')
+        self._reset_cli.wait_for_service()
 
         self.MAX_ITERATION_COUNT = self.get_parameter("iteration_count").value
         assert self.MAX_ITERATION_COUNT > 0
         self.curr_iteration_count = 1
 
-        self.__initial_goal_publisher = self.create_publisher(PoseWithCovarianceStamped, "/initialpose", 1)
+        self.__initial_goal_publisher = self.create_publisher(
+            PoseWithCovarianceStamped, "/initialpose", 1
+        )
 
         self.__initial_pose = self.get_parameter("initial_pose").value
         self.__is_initial_pose_sent = True if self.__initial_pose is None else False
 
-        # internal state for feedback processing
-        self._goal_handle = None
+    def __reset_tag_logger_then(self, continuation_fn):
+        """Call /reset_tag_id_log and, when it returns, run continuation_fn()."""
+        future = self._reset_cli.call_async(Empty.Request())
+        future.add_done_callback(lambda _f: continuation_fn())
 
-    # ---------------------------------------------------------------------
-    # Utility
-    # ---------------------------------------------------------------------
-    @staticmethod
-    def _duration_to_seconds(dur_msg):
-        return dur_msg.sec + dur_msg.nanosec * 1e-9
+    def __shutdown(self):
+        rclpy.shutdown()
 
-    # ---------------------------------------------------------------------
     def __send_initial_pose(self):
-        """
-        Publishes the initial pose.
-        This function is only called once that too before sending any goal pose
-        to the mission server.
-        """
         goal = PoseWithCovarianceStamped()
         goal.header.frame_id = self.get_parameter("frame_id").value
         goal.header.stamp = self.get_clock().now().to_msg()
@@ -90,26 +68,17 @@ class SetNavigationGoal(Node):
         goal.pose.pose.orientation.w = self.__initial_pose[6]
         self.__initial_goal_publisher.publish(goal)
 
-    # ---------------------------------------------------------------------
-    def send_goal(self):
-        """
-        Sends the goal to the action server.
-        """
 
+    def send_goal(self):
         if not self.__is_initial_pose_sent:
             self.get_logger().info("Sending initial pose")
             self.__send_initial_pose()
             self.__is_initial_pose_sent = True
-
-            # Assumption is that initial pose is set after publishing first time in this duration.
-            # Can be changed to more sophisticated way. e.g. /particlecloud topic has no msg until
-            # the initial pose is set.
-            time.sleep(10)
+            time.sleep(10)  # let AMCL converge
             self.get_logger().info("Sending first goal")
 
         self._action_client.wait_for_server()
         goal_msg = self.__get_goal()
-
         if goal_msg is None:
             rclpy.shutdown()
             sys.exit(1)
@@ -119,13 +88,7 @@ class SetNavigationGoal(Node):
         )
         self._send_goal_future.add_done_callback(self.__goal_response_callback)
 
-    # ---------------------------------------------------------------------
     def __goal_response_callback(self, future):
-        """
-        Callback function to check the response(goal accpted/rejected) from the server.
-        If the Goal is rejected it stops the execution for now.(We can change to resample the pose if rejected.)
-        """
-
         goal_handle = future.result()
         if not goal_handle.accepted:
             self.get_logger().info("Goal rejected :(")
@@ -133,41 +96,35 @@ class SetNavigationGoal(Node):
             return
 
         self.get_logger().info("Goal accepted :)")
-        self._goal_handle = goal_handle  # keep for potential cancellation
-
         self._get_result_future = goal_handle.get_result_async()
         self._get_result_future.add_done_callback(self.__get_result_callback)
 
-    # ---------------------------------------------------------------------
+    def __get_result_callback(self, future):
+        result = future.result().result
+        self.get_logger().info(f"Result: {result.result}")
+
+        if self.curr_iteration_count < self.MAX_ITERATION_COUNT:
+            self.curr_iteration_count += 1
+            self.send_goal()  # continue — no reset yet
+        else:
+            # All goals done → clear Tag‑ID cache once, then shut down
+            self.__reset_tag_logger_then(self.__shutdown)
+
+    def __feedback_callback(self, feedback_msg):
+        pass
+
     def __get_goal(self):
-        """
-        Get the next goal from the goal generator.
-
-        Returns
-        -------
-        [NavigateToPose][goal] or None if the next goal couldn't be generated.
-
-        """
-
+        """Create and return the next NavigateToPose.Goal message."""
         goal_msg = NavigateToPose.Goal()
         goal_msg.pose.header.frame_id = self.get_parameter("frame_id").value
         goal_msg.pose.header.stamp = self.get_clock().now().to_msg()
         pose = self.__goal_generator.generate_goal()
 
-        # couldn't sample a pose which is not close to obstacles. Rare but might happen in dense maps.
         if pose is None:
-            self.get_logger().error(
-                "Could not generate next goal. Returning. Possible reasons for this error could be:"
-            )
-            self.get_logger().error(
-                "1. If you are using GoalReader then please make sure iteration count <= number of goals avaiable in file."
-            )
-            self.get_logger().error(
-                "2. If RandomGoalGenerator is being used then it was not able to sample a pose which is given distance away from the obstacles."
-            )
+            self.get_logger().error("Could not generate next goal. Exiting.")
             return
 
-        self.get_logger().info("Generated goal pose: {0}".format(pose))
+        self.get_logger().info(f"Generated goal pose: {pose}")
         goal_msg.pose.pose.position.x = pose[0]
         goal_msg.pose.pose.position.y = pose[1]
         goal_msg.pose.pose.orientation.x = pose[2]
@@ -176,104 +133,39 @@ class SetNavigationGoal(Node):
         goal_msg.pose.pose.orientation.w = pose[5]
         return goal_msg
 
-    # ---------------------------------------------------------------------
-    def __get_result_callback(self, future):
-        """
-        Callback to check result.  It calls the send_goal() function in case current goal sent count < required goals count.
-        Also logs the overall status (SUCCEEDED/FAILED) to the CSV.
-        """
-        result_msg = future.result().result  # NavigateToPose.Result
-
-        # ----------- CSV: write one final status row -----------------------
-        sim_time_s = self.get_clock().now().nanoseconds * 1e-9
-        status_str = "SUCCEEDED" if result_msg.result == 0 else "FAILED"
-        self._csv_writer.writerow([sim_time_s, "", "", "", "", "", "", status_str])
-        self._csv_file.flush()
-        # ------------------------------------------------------------------
-
-        self.get_logger().info("Result: {0}".format(result_msg.result))
-
-        if self.curr_iteration_count < self.MAX_ITERATION_COUNT:
-            self.curr_iteration_count += 1
-            self.send_goal()
-        else:
-            rclpy.shutdown()
-
-    # ---------------------------------------------------------------------
-    def __feedback_callback(self, feedback_msg):
-        """
-        Feedback handler – logs simulation time and navigation metrics to the CSV.
-        """
-        fb = feedback_msg.feedback
-        pos = fb.current_pose.pose.position
-
-        sim_time_s = self.get_clock().now().nanoseconds * 1e-9  # sim‑time (ROS clock)
-        distance_left = fb.distance_remaining
-        eta = self._duration_to_seconds(fb.estimated_time_remaining)
-        nav_time = self._duration_to_seconds(fb.navigation_time)
-        recoveries = fb.number_of_recoveries
-
-        self._csv_writer.writerow([
-            sim_time_s,
-            pos.x,
-            pos.y,
-            distance_left,
-            eta,
-            nav_time,
-            recoveries,
-            "",  # goal_status left blank for per‑feedback rows
-        ])
-        self._csv_file.flush()
-
-    # ---------------------------------------------------------------------
     def __create_goal_generator(self):
-        """
-        Creates the GoalGenerator object based on the specified ros param value.
-        """
-
         goal_generator_type = self.get_parameter("goal_generator_type").value
-        goal_generator = None
+
         if goal_generator_type == "RandomGoalGenerator":
-            if self.get_parameter("map_yaml_path").value is None:
-                self.get_logger().info("Yaml file path is not given. Returning..")
+            yaml_file_path = self.get_parameter("map_yaml_path").value
+            if yaml_file_path is None:
+                self.get_logger().info("Yaml file path is not given. Exiting.")
                 sys.exit(1)
 
-            yaml_file_path = self.get_parameter("map_yaml_path").value
             grid_map = GridMap(yaml_file_path)
-            obstacle_search_distance_in_meters = self.get_parameter("obstacle_search_distance_in_meters").value
-            assert obstacle_search_distance_in_meters > 0
-            goal_generator = RandomGoalGenerator(grid_map, obstacle_search_distance_in_meters)
+            obstacle_distance = self.get_parameter(
+                "obstacle_search_distance_in_meters"
+            ).value
+            return RandomGoalGenerator(grid_map, obstacle_distance)
 
         elif goal_generator_type == "GoalReader":
-            if self.get_parameter("goal_text_file_path").value is None:
-                self.get_logger().info("Goal text file path is not given. Returning..")
+            file_path = self.get_parameter("goal_text_file_path").value
+            if file_path is None:
+                self.get_logger().info("Goal text file path is not given. Exiting.")
                 sys.exit(1)
 
-            file_path = self.get_parameter("goal_text_file_path").value
-            goal_generator = GoalReader(file_path)
+            return GoalReader(file_path)
+
         else:
-            self.get_logger().info("Invalid goal generator specified. Returning...")
+            self.get_logger().info("Invalid goal generator specified. Exiting.")
             sys.exit(1)
-        return goal_generator
 
-    # ---------------------------------------------------------------------
-    def destroy_node(self):
-        # Ensure CSV is closed cleanly
-        if hasattr(self, "_csv_file") and not self._csv_file.closed:
-            self.get_logger().info(f"CSV written to {self._csv_file_path}")
-            self._csv_file.close()
-        super().destroy_node()
-
-
-# -------------------------------------------------------------------------
-# main entry point
-# -------------------------------------------------------------------------
 
 def main():
     rclpy.init()
-    set_goal = SetNavigationGoal()
-    set_goal.send_goal()
-    rclpy.spin(set_goal)
+    node = SetNavigationGoal()
+    node.send_goal()
+    rclpy.spin(node)
 
 
 if __name__ == "__main__":

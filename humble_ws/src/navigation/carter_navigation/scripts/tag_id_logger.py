@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-ROS 2 node that logs every new AprilTag ID it sees.
+ROS 2 node that logs every new AprilTag ID it sees,
+but ‘forgets’ them whenever the /reset_tag_id_log service is called.
 """
 
 from datetime import datetime
@@ -12,7 +13,7 @@ from rclpy.node import Node
 from rclpy.parameter import Parameter
 from rclpy.time import Time
 from isaac_ros_apriltag_interfaces.msg import AprilTagDetectionArray
-
+from std_srvs.srv import Empty
 
 class TagIdLogger(Node):
     def __init__(self) -> None:
@@ -21,19 +22,16 @@ class TagIdLogger(Node):
             parameter_overrides=[Parameter('use_sim_time', Parameter.Type.BOOL, True)],
         )
 
-        # Find the workspace root (…/humble_ws)
         script_path = Path(__file__).resolve()
         try:
             workspace_root = next(p for p in script_path.parents if p.name.endswith('_ws'))
         except StopIteration:
-            # Fallback: move four levels up from …/install/<pkg>/lib/<pkg>/tag_id_logger.py
             workspace_root = script_path.parents[4]
 
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         default_log = workspace_root / 'data_log' / f'{timestamp}.csv'
         default_log.parent.mkdir(parents=True, exist_ok=True)
 
-        # Allow an override via ROS 2 parameter
         self.declare_parameter('log_path', str(default_log))
         self.filepath = Path(self.get_parameter('log_path').get_parameter_value().string_value)
         self.filepath.parent.mkdir(parents=True, exist_ok=True)
@@ -44,6 +42,7 @@ class TagIdLogger(Node):
 
         self.seen_ids: Set[int] = set()
 
+        # subscriber for AprilTag detections
         self.create_subscription(
             AprilTagDetectionArray,
             '/tag_detections',
@@ -51,13 +50,20 @@ class TagIdLogger(Node):
             10,
         )
 
-        self.get_logger().info(f"Logging new tag IDs to {self.filepath}")
+        # service that clears the seen‑ID cache
+        self.create_service(Empty, 'reset_tag_id_log', self.on_reset)
 
+        self.get_logger().info(f"Logging new tag IDs to {self.filepath}")
+        self.get_logger().info("Call `ros2 service call /reset_tag_id_log std_srvs/srv/Empty` "
+                               "to reset the ID cache")
+
+    # helpers
     def _sim_now_str(self) -> str:
         t: Time = self.get_clock().now()
         secs, nsecs = divmod(t.nanoseconds, 1_000_000_000)
         return f"{secs}.{nsecs:09d}"
 
+    # callbacks
     def on_detections(self, msg: AprilTagDetectionArray) -> None:
         for det in msg.detections:
             tag_id = det.id[0] if hasattr(det.id, '__iter__') else det.id
@@ -69,6 +75,12 @@ class TagIdLogger(Node):
                 f.write(f'{self._sim_now_str()},{tag_id}\n')
 
             self.get_logger().info(f"New tag ID {tag_id} saved")
+
+    def on_reset(self, req: Empty.Request, res: Empty.Response) -> Empty.Response:
+        self.get_logger().info("Reset request received – clearing seen‑ID cache")
+        self.seen_ids.clear()
+
+        return res
 
 
 def main(args=None) -> None:
