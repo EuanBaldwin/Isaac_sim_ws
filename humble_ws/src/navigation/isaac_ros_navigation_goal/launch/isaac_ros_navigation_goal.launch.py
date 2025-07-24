@@ -31,10 +31,12 @@ def generate_launch_description():
         name="set_navigation_goal",
         package="isaac_ros_navigation_goal",
         executable="SetNavigationGoal",
+        respawn=True,
+        respawn_delay=2.0,
         parameters=[
             {
                 "map_yaml_path": map_yaml_file,
-                "iteration_count": 6,
+                "iteration_count": 2,
                 "goal_generator_type": "GoalReader",
                 "action_server_name": "navigate_to_pose",
                 "obstacle_search_distance_in_meters": 0.2,

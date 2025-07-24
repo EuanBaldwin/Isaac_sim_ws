@@ -146,5 +146,14 @@ def generate_launch_description():
             ld_apriltag,
             tag_id_logger_node,
             #docking_server,
+            Node(
+        	package   = 'simulation_interfaces',
+        	executable= 'reset_supervisor.py',
+        	name      = 'reset_supervisor',
+        	output    = 'screen',
+        	parameters= [{
+            		'timeout_sec': 600,
+        	}]
+    	    ),
         ]
     )

@@ -7,8 +7,6 @@ from .goal_generators import RandomGoalGenerator, GoalReader
 import sys
 from geometry_msgs.msg import PoseWithCovarianceStamped
 import time
-import csv
-import datetime  # NEW – for wall‑time‑based file naming
 
 
 class SetNavigationGoal(Node):
@@ -29,25 +27,6 @@ class SetNavigationGoal(Node):
             ],
         )
 
-        # --- CSV writer -----------------------------------------------------
-        wall_stamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        self._csv_file_path = f"/tmp/nav_feedback_{wall_stamp}.csv"
-        self._csv_file = open(self._csv_file_path, "w", newline="")
-        self._csv_writer = csv.writer(self._csv_file)
-        self._csv_writer.writerow(
-            [
-                "sim_time_s",  # clock() time, works in simulation
-                "x_m",
-                "y_m",
-                "distance_left_m",
-                "eta_s",
-                "nav_time_s",
-                "recoveries",
-                "goal_status",  # SUCCEEDED | FAILED written once per goal
-            ]
-        )
-        # --------------------------------------------------------------------
-
         self.__goal_generator = self.__create_goal_generator()
         action_server_name = self.get_parameter("action_server_name").value
         self._action_client = ActionClient(self, NavigateToPose, action_server_name)
@@ -61,17 +40,6 @@ class SetNavigationGoal(Node):
         self.__initial_pose = self.get_parameter("initial_pose").value
         self.__is_initial_pose_sent = True if self.__initial_pose is None else False
 
-        # internal state for feedback processing
-        self._goal_handle = None
-
-    # ---------------------------------------------------------------------
-    # Utility
-    # ---------------------------------------------------------------------
-    @staticmethod
-    def _duration_to_seconds(dur_msg):
-        return dur_msg.sec + dur_msg.nanosec * 1e-9
-
-    # ---------------------------------------------------------------------
     def __send_initial_pose(self):
         """
         Publishes the initial pose.
@@ -90,7 +58,6 @@ class SetNavigationGoal(Node):
         goal.pose.pose.orientation.w = self.__initial_pose[6]
         self.__initial_goal_publisher.publish(goal)
 
-    # ---------------------------------------------------------------------
     def send_goal(self):
         """
         Sends the goal to the action server.
@@ -119,10 +86,9 @@ class SetNavigationGoal(Node):
         )
         self._send_goal_future.add_done_callback(self.__goal_response_callback)
 
-    # ---------------------------------------------------------------------
     def __goal_response_callback(self, future):
         """
-        Callback function to check the response(goal accpted/rejected) from the server.
+        Callback function to check the response(goal accpted/rejected) from the server.\n
         If the Goal is rejected it stops the execution for now.(We can change to resample the pose if rejected.)
         """
 
@@ -133,12 +99,10 @@ class SetNavigationGoal(Node):
             return
 
         self.get_logger().info("Goal accepted :)")
-        self._goal_handle = goal_handle  # keep for potential cancellation
 
         self._get_result_future = goal_handle.get_result_async()
         self._get_result_future.add_done_callback(self.__get_result_callback)
 
-    # ---------------------------------------------------------------------
     def __get_goal(self):
         """
         Get the next goal from the goal generator.
@@ -176,22 +140,14 @@ class SetNavigationGoal(Node):
         goal_msg.pose.pose.orientation.w = pose[5]
         return goal_msg
 
-    # ---------------------------------------------------------------------
     def __get_result_callback(self, future):
         """
-        Callback to check result.  It calls the send_goal() function in case current goal sent count < required goals count.
-        Also logs the overall status (SUCCEEDED/FAILED) to the CSV.
+        Callback to check result.\n
+        It calls the send_goal() function in case current goal sent count < required goals count.     
         """
-        result_msg = future.result().result  # NavigateToPose.Result
-
-        # ----------- CSV: write one final status row -----------------------
-        sim_time_s = self.get_clock().now().nanoseconds * 1e-9
-        status_str = "SUCCEEDED" if result_msg.result == 0 else "FAILED"
-        self._csv_writer.writerow([sim_time_s, "", "", "", "", "", "", status_str])
-        self._csv_file.flush()
-        # ------------------------------------------------------------------
-
-        self.get_logger().info("Result: {0}".format(result_msg.result))
+        # Nav2 is sending empty message for success as well as for failure.
+        result = future.result().result
+        self.get_logger().info("Result: {0}".format(result.result))
 
         if self.curr_iteration_count < self.MAX_ITERATION_COUNT:
             self.curr_iteration_count += 1
@@ -199,33 +155,13 @@ class SetNavigationGoal(Node):
         else:
             rclpy.shutdown()
 
-    # ---------------------------------------------------------------------
     def __feedback_callback(self, feedback_msg):
         """
-        Feedback handler – logs simulation time and navigation metrics to the CSV.
+        This is feeback callback. We can compare/compute/log while the robot is on its way to goal.
         """
-        fb = feedback_msg.feedback
-        pos = fb.current_pose.pose.position
+        # self.get_logger().info('FEEDBACK: {}\n'.format(feedback_msg))
+        pass
 
-        sim_time_s = self.get_clock().now().nanoseconds * 1e-9  # sim‑time (ROS clock)
-        distance_left = fb.distance_remaining
-        eta = self._duration_to_seconds(fb.estimated_time_remaining)
-        nav_time = self._duration_to_seconds(fb.navigation_time)
-        recoveries = fb.number_of_recoveries
-
-        self._csv_writer.writerow([
-            sim_time_s,
-            pos.x,
-            pos.y,
-            distance_left,
-            eta,
-            nav_time,
-            recoveries,
-            "",  # goal_status left blank for per‑feedback rows
-        ])
-        self._csv_file.flush()
-
-    # ---------------------------------------------------------------------
     def __create_goal_generator(self):
         """
         Creates the GoalGenerator object based on the specified ros param value.
@@ -256,26 +192,13 @@ class SetNavigationGoal(Node):
             sys.exit(1)
         return goal_generator
 
-    # ---------------------------------------------------------------------
-    def destroy_node(self):
-        # Ensure CSV is closed cleanly
-        if hasattr(self, "_csv_file") and not self._csv_file.closed:
-            self.get_logger().info(f"CSV written to {self._csv_file_path}")
-            self._csv_file.close()
-        super().destroy_node()
-
-
-# -------------------------------------------------------------------------
-# main entry point
-# -------------------------------------------------------------------------
 
 def main():
     rclpy.init()
     set_goal = SetNavigationGoal()
-    set_goal.send_goal()
+    result = set_goal.send_goal()
     rclpy.spin(set_goal)
 
 
 if __name__ == "__main__":
     main()
-
