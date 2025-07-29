@@ -6,6 +6,7 @@
 ## license agreement from NVIDIA CORPORATION is strictly prohibited.
 
 import os
+import time
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
@@ -45,10 +46,10 @@ def generate_launch_description():
         PythonLaunchDescriptionSource([apriltag_launch_file]),
     )
 
-    tag_id_logger_node = Node(
+    logger_node = Node(
         package="carter_navigation",
-        executable="tag_id_logger.py",
-        name="tag_id_logger",
+        executable="logger.py",
+        name="logger",
         output="screen",
     )
     
@@ -69,8 +70,6 @@ def generate_launch_description():
         ),
     )
 
-    
-
     def execute_second_node_if_condition_met(event, second_node_action):
         output = event.text.decode().strip()
         # Look for fully loaded message from Isaac Sim. Only applicable in Gui mode.
@@ -79,7 +78,6 @@ def generate_launch_description():
             print("Condition met, launching the second node.")
             
             # If Nav2 takes additional time to initialize, uncomment the lines below to add a delay of 10 seconds (or any desired duration) before launching the second_node_action
-            import time
             time.sleep(10)
             return second_node_action
 
@@ -109,7 +107,7 @@ def generate_launch_description():
             DeclareLaunchArgument("use_sim_time", default_value="true", description="Use simulation (Omniverse Isaac Sim) clock if true"),
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(os.path.join(nav2_bringup_launch_dir, "rviz_launch.py")),
-                launch_arguments={"namespace": "", "use_namespace": "False", "rviz_config": rviz_config_dir}.items(),
+                launch_arguments={"namespace": "", "use_namespace": "False", "use_sim_time": use_sim_time, "rviz_config": rviz_config_dir}.items(),
             ),
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([nav2_bringup_launch_dir, "/bringup_launch.py"]),
@@ -121,6 +119,7 @@ def generate_launch_description():
                             ('scan', ['/scan'])],
                 parameters=[{
                     'target_frame': 'front_3d_lidar',
+                    'use_sim_time': use_sim_time,
                     'transform_tolerance': 0.01,
                     'min_height': -0.4,
                     'max_height': 1.5,
@@ -144,7 +143,7 @@ def generate_launch_description():
                 )
             ),
             ld_apriltag,
-            tag_id_logger_node,
+            logger_node,
             #docking_server,
         ]
     )

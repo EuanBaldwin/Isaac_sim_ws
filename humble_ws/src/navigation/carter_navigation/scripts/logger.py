@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ROS 2 node that logs every new AprilTag ID it sees,
+ROS 2 node that logs every new AprilTag ID it sees and waypoint it reaches,
 but ‘forgets’ them whenever the /reset_tag_id_log service is called.
 """
 
@@ -13,12 +13,13 @@ from rclpy.node import Node
 from rclpy.parameter import Parameter
 from rclpy.time import Time
 from isaac_ros_apriltag_interfaces.msg import AprilTagDetectionArray
+from std_msgs.msg import UInt32
 from std_srvs.srv import Empty
 
-class TagIdLogger(Node):
+class Logger(Node):
     def __init__(self) -> None:
         super().__init__(
-            'tag_id_logger',
+            'logger',
             parameter_overrides=[Parameter('use_sim_time', Parameter.Type.BOOL, True)],
         )
 
@@ -27,18 +28,15 @@ class TagIdLogger(Node):
             workspace_root = next(p for p in script_path.parents if p.name.endswith('_ws'))
         except StopIteration:
             workspace_root = script_path.parents[4]
-
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        default_log = workspace_root / 'data_log' / f'{timestamp}.csv'
-        default_log.parent.mkdir(parents=True, exist_ok=True)
-
-        self.declare_parameter('log_path', str(default_log))
-        self.filepath = Path(self.get_parameter('log_path').get_parameter_value().string_value)
-        self.filepath.parent.mkdir(parents=True, exist_ok=True)
-
-        if not self.filepath.exists():
-            with self.filepath.open('w') as f:
-                f.write('sim_time,id\n')
+            
+            
+        launch_ts = datetime.now().strftime('%Y%m%d_%H%M%S')
+        self.run_dir = workspace_root / 'data_log' / launch_ts
+        self.run_dir.mkdir(parents=True, exist_ok=True)
+        self.run_index = 0
+        self.filepath = self.run_dir / f'run_{self.run_index}.csv'
+        self.filepath.write_text('sim_time,event,value\n')
+        self.declare_parameter('log_path', str(self.filepath))
 
         self.seen_ids: Set[int] = set()
 
@@ -47,6 +45,14 @@ class TagIdLogger(Node):
             AprilTagDetectionArray,
             '/tag_detections',
             self.on_detections,
+            10,
+        )
+        
+        # subscriber for Waypoints
+        self.create_subscription(
+            UInt32,
+            '/waypoint_reached',
+            self._on_waypoint,
             10,
         )
 
@@ -63,6 +69,10 @@ class TagIdLogger(Node):
         secs, nsecs = divmod(t.nanoseconds, 1_000_000_000)
         return f"{secs}.{nsecs:09d}"
 
+    def _append_row(self, event: str, value: int | str) -> None:
+        with self.filepath.open('a') as f:
+            f.write(f'{self._sim_now_str()},{event},{value}\n')
+
     # callbacks
     def on_detections(self, msg: AprilTagDetectionArray) -> None:
         for det in msg.detections:
@@ -71,21 +81,26 @@ class TagIdLogger(Node):
                 continue
 
             self.seen_ids.add(tag_id)
-            with self.filepath.open('a') as f:
-                f.write(f'{self._sim_now_str()},{tag_id}\n')
-
+            self._append_row('tag', tag_id)
             self.get_logger().info(f"New tag ID {tag_id} saved")
+            
+    def _on_waypoint(self, msg: UInt32) -> None:
+        self._append_row('waypoint', msg.data)
+        self.get_logger().info(f"Waypoint {msg.data} saved")
 
     def on_reset(self, req: Empty.Request, res: Empty.Response) -> Empty.Response:
         self.get_logger().info("Reset request received – clearing seen‑ID cache")
         self.seen_ids.clear()
-
+        self.run_index += 1
+        self.filepath = self.run_dir / f'run_{self.run_index}.csv'
+        self.filepath.write_text('sim_time,event,value\n')
+        self.get_logger().info(f"Now logging to {self.filepath}")
         return res
 
 
 def main(args=None) -> None:
     rclpy.init(args=args)
-    node = TagIdLogger()
+    node = Logger()
     try:
         rclpy.spin(node)
     finally:

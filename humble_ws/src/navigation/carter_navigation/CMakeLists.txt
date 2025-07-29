@@ -13,7 +13,7 @@ install(DIRECTORY
 # install the Python tag_id_logger node
 install(
   PROGRAMS
-    scripts/tag_id_logger.py
+    scripts/logger.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

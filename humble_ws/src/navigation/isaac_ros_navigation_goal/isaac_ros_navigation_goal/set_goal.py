@@ -8,6 +8,8 @@ from .goal_generators import RandomGoalGenerator, GoalReader
 import sys
 from geometry_msgs.msg import PoseWithCovarianceStamped
 import time
+from std_msgs.msg import UInt32
+from action_msgs.msg import GoalStatus
 
 
 class SetNavigationGoal(Node):
@@ -25,12 +27,18 @@ class SetNavigationGoal(Node):
                 ("map_yaml_path", rclpy.Parameter.Type.STRING),
                 ("goal_text_file_path", rclpy.Parameter.Type.STRING),
                 ("initial_pose", rclpy.Parameter.Type.DOUBLE_ARRAY),
+                ("waypoint_topic", "/waypoint_reached"),
             ],
         )
 
         self.__goal_generator = self.__create_goal_generator()
         action_server_name = self.get_parameter("action_server_name").value
         self._action_client = ActionClient(self, NavigateToPose, action_server_name)
+        
+        # publisher that announces when a waypoint is reached
+        waypoint_topic = self.get_parameter("waypoint_topic").value
+        self._waypoint_pub = self.create_publisher(UInt32, waypoint_topic, 10)
+        self._waypoint_index = 0 
 
         # Tag‑ID‑logger reset service client (used only once at the end)
         self._reset_cli = self.create_client(Empty, '/reset_tag_id_log')
@@ -40,10 +48,7 @@ class SetNavigationGoal(Node):
         assert self.MAX_ITERATION_COUNT > 0
         self.curr_iteration_count = 1
 
-        self.__initial_goal_publisher = self.create_publisher(
-            PoseWithCovarianceStamped, "/initialpose", 1
-        )
-
+        self.__initial_goal_publisher = self.create_publisher(PoseWithCovarianceStamped, "/initialpose", 1)
         self.__initial_pose = self.get_parameter("initial_pose").value
         self.__is_initial_pose_sent = True if self.__initial_pose is None else False
 
@@ -100,14 +105,28 @@ class SetNavigationGoal(Node):
         self._get_result_future.add_done_callback(self.__get_result_callback)
 
     def __get_result_callback(self, future):
-        result = future.result().result
-        self.get_logger().info(f"Result: {result.result}")
+        response = future.result()
+        status_code = response.status
+        
+        if status_code == GoalStatus.STATUS_SUCCEEDED:
+            msg = UInt32()
+            msg.data = self._waypoint_index
+            self._waypoint_pub.publish(msg)
+            self.get_logger().info(
+                f"Waypoint {self._waypoint_index} reached "
+                f"(published on {self._waypoint_pub.topic_name})"
+            )
+        else:
+            self.get_logger().warn(
+                f"Goal finished with status {status_code}; waypoint not logged"
+            )
+
+        self._waypoint_index += 1            # always advance label
 
         if self.curr_iteration_count < self.MAX_ITERATION_COUNT:
             self.curr_iteration_count += 1
-            self.send_goal()  # continue — no reset yet
+            self.send_goal()
         else:
-            # All goals done → clear Tag‑ID cache once, then shut down
             self.__reset_tag_logger_then(self.__shutdown)
 
     def __feedback_callback(self, feedback_msg):
