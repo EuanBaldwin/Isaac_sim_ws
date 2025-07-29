@@ -78,7 +78,7 @@ def generate_launch_description():
             print("Condition met, launching the second node.")
             
             # If Nav2 takes additional time to initialize, uncomment the lines below to add a delay of 10 seconds (or any desired duration) before launching the second_node_action
-            time.sleep(10)
+            time.sleep(15)
             return second_node_action
 
 

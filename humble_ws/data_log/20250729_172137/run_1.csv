@@ -1,0 +1,11 @@
+sim_time,event,value
+197.816676983,tag,5
+254.983346631,recovery_enter,Wait
+260.083346897,recovery_exit,Wait
+284.516681505,recovery_enter,BackUp
+291.383348530,recovery_exit,BackUp
+296.150015445,recovery_enter,Spin
+297.550015518,recovery_exit,Spin
+297.550015518,recovery_enter,Wait
+302.583349114,recovery_exit,Wait
+311.850016264,recovery_enter,BackUp

@@ -15,6 +15,13 @@ from rclpy.time import Time
 from isaac_ros_apriltag_interfaces.msg import AprilTagDetectionArray
 from std_msgs.msg import UInt32
 from std_srvs.srv import Empty
+from nav2_msgs.msg import BehaviorTreeLog, BehaviorTreeStatusChange
+
+LEAF_RECOVERIES: set[str] = {
+    'Spin', 'BackUp', 'Wait',
+    'ClearEntireCostmap', 'ClearCostmapExceptRegion',
+    'ClearCostmapAroundRobot', 'ClearCostmapAroundPose',
+}
 
 class Logger(Node):
     def __init__(self) -> None:
@@ -39,6 +46,8 @@ class Logger(Node):
         self.declare_parameter('log_path', str(self.filepath))
 
         self.seen_ids: Set[int] = set()
+        self._in_recovery = False
+        self._last_status: dict[str, str] = {}
 
         # subscriber for AprilTag detections
         self.create_subscription(
@@ -53,6 +62,13 @@ class Logger(Node):
             UInt32,
             '/waypoint_reached',
             self._on_waypoint,
+            10,
+        )
+        
+        self.create_subscription(
+            BehaviorTreeLog,
+            '/behavior_tree_log',
+            self._on_bt_log,
             10,
         )
 
@@ -87,6 +103,25 @@ class Logger(Node):
     def _on_waypoint(self, msg: UInt32) -> None:
         self._append_row('waypoint', msg.data)
         self.get_logger().info(f"Waypoint {msg.data} saved")
+        
+    def _on_bt_log(self, msg: BehaviorTreeLog) -> None:
+        for ev in msg.event_log:                       # type: BehaviorTreeStatusChange
+            name, prev, curr = ev.node_name, ev.previous_status, ev.current_status
+
+            if name not in LEAF_RECOVERIES:
+                continue
+
+            last = self._last_status.get(name)
+            if last == curr:
+                continue
+            self._last_status[name] = curr
+
+            if curr == 'RUNNING':
+                self._append_row('recovery_enter', name)
+                self.get_logger().info(f'Entered recovery: {name}')
+            elif last == 'RUNNING' and curr in {'SUCCESS', 'FAILURE', 'IDLE'}:
+                self._append_row('recovery_exit',  name)
+                self.get_logger().info(f'Exited  recovery: {name}')
 
     def on_reset(self, req: Empty.Request, res: Empty.Response) -> Empty.Response:
         self.get_logger().info("Reset request received – clearing seen‑ID cache")
