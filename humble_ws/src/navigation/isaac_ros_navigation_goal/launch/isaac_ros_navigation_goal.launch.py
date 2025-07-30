@@ -42,6 +42,8 @@ def generate_launch_description():
                 "obstacle_search_distance_in_meters": 0.2,
                 "goal_text_file_path": goal_text_file,
                 "initial_pose": [4.2, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0],
+                "dock_pose": [4.2, 0.0, 0.0, 0.0, 1.0, 0.0],
+                "battery_low_threshold": 0.50
             }
         ],
         output="screen",

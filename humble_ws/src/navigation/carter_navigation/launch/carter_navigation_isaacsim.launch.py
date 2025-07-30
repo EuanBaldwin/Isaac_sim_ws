@@ -42,15 +42,26 @@ def generate_launch_description():
     docking_params = os.path.join(get_package_share_directory("carter_navigation"), "params", "carter_docking.yaml")
     apriltag_launch_file = os.path.join(get_package_share_directory("carter_navigation"), "launch", "apriltag.launch.py")
 
-    ld_apriltag = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([apriltag_launch_file]),
-    )
+    ld_apriltag = IncludeLaunchDescription(PythonLaunchDescriptionSource([apriltag_launch_file]),)
 
     logger_node = Node(
         package="carter_navigation",
         executable="logger.py",
         name="logger",
         output="screen",
+    )
+    
+    battery_node = Node(
+        package="carter_navigation",
+        executable="battery_sim.py",
+        name="battery_sim",
+        output="screen",
+        parameters=[{
+            'use_sim_time': use_sim_time,
+            'capacity_wh': 3.0,
+            'idle_w': 50.0,
+            'move_w': 300.0
+        }]
     )
     
     docking_server = Node(
@@ -107,11 +118,11 @@ def generate_launch_description():
             DeclareLaunchArgument("use_sim_time", default_value="true", description="Use simulation (Omniverse Isaac Sim) clock if true"),
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(os.path.join(nav2_bringup_launch_dir, "rviz_launch.py")),
-                launch_arguments={"namespace": "", "use_namespace": "False", "use_sim_time": use_sim_time, "rviz_config": rviz_config_dir}.items(),
+                launch_arguments={"namespace": "", "use_namespace": "False", "use_sim_time": "True", "rviz_config": rviz_config_dir}.items(),
             ),
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([nav2_bringup_launch_dir, "/bringup_launch.py"]),
-                launch_arguments={"map": map_dir, "use_sim_time": use_sim_time, "params_file": param_dir}.items(),
+                launch_arguments={"map": map_dir, "use_sim_time": "True", "params_file": param_dir}.items(),
             ),
             Node(
                 package='pointcloud_to_laserscan', executable='pointcloud_to_laserscan_node',
@@ -144,6 +155,7 @@ def generate_launch_description():
             ),
             ld_apriltag,
             logger_node,
+            battery_node,
             #docking_server,
         ]
     )

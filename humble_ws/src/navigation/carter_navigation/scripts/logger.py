@@ -23,6 +23,9 @@ LEAF_RECOVERIES: set[str] = {
     'ClearCostmapAroundRobot', 'ClearCostmapAroundPose',
 }
 
+GREEN  = "\033[1;32m"
+RESET  = "\033[0m"
+
 class Logger(Node):
     def __init__(self) -> None:
         super().__init__(
@@ -74,10 +77,8 @@ class Logger(Node):
 
         # service that clears the seen‑ID cache
         self.create_service(Empty, 'reset_tag_id_log', self.on_reset)
-
-        self.get_logger().info(f"Logging new tag IDs to {self.filepath}")
-        self.get_logger().info("Call `ros2 service call /reset_tag_id_log std_srvs/srv/Empty` "
-                               "to reset the ID cache")
+        self.get_logger().info(f"{GREEN}Logging new tag IDs to {self.filepath}{RESET}")
+        self.get_logger().info(f"{GREEN}Call `ros2 service call /reset_tag_id_log std_srvs/srv/Empty` to reset the ID cache{RESET}")
 
     # helpers
     def _sim_now_str(self) -> str:
@@ -98,14 +99,14 @@ class Logger(Node):
 
             self.seen_ids.add(tag_id)
             self._append_row('tag', tag_id)
-            self.get_logger().info(f"New tag ID {tag_id} saved")
+            self.get_logger().info(f"{GREEN}New tag ID {tag_id} saved{RESET}")
             
     def _on_waypoint(self, msg: UInt32) -> None:
         self._append_row('waypoint', msg.data)
-        self.get_logger().info(f"Waypoint {msg.data} saved")
+        self.get_logger().info(f"{GREEN}Waypoint {msg.data} saved{RESET}")
         
     def _on_bt_log(self, msg: BehaviorTreeLog) -> None:
-        for ev in msg.event_log:                       # type: BehaviorTreeStatusChange
+        for ev in msg.event_log:
             name, prev, curr = ev.node_name, ev.previous_status, ev.current_status
 
             if name not in LEAF_RECOVERIES:
@@ -118,18 +119,18 @@ class Logger(Node):
 
             if curr == 'RUNNING':
                 self._append_row('recovery_enter', name)
-                self.get_logger().info(f'Entered recovery: {name}')
+                self.get_logger().info(f'{GREEN}Entered recovery: {name}{RESET}')
             elif last == 'RUNNING' and curr in {'SUCCESS', 'FAILURE', 'IDLE'}:
                 self._append_row('recovery_exit',  name)
-                self.get_logger().info(f'Exited  recovery: {name}')
+                self.get_logger().info(f'{GREEN}Exited  recovery: {name}{RESET}')
 
     def on_reset(self, req: Empty.Request, res: Empty.Response) -> Empty.Response:
-        self.get_logger().info("Reset request received – clearing seen‑ID cache")
+        self.get_logger().info(f"{GREEN}Reset request received – clearing seen‑ID cache{RESET}")
         self.seen_ids.clear()
         self.run_index += 1
         self.filepath = self.run_dir / f'run_{self.run_index}.csv'
         self.filepath.write_text('sim_time,event,value\n')
-        self.get_logger().info(f"Now logging to {self.filepath}")
+        self.get_logger().info(f"{GREEN}Now logging to {self.filepath}{RESET}")
         return res
 
 

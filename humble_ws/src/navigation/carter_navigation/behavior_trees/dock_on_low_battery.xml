@@ -1,0 +1,11 @@
+<Fallback name="root">
+  <!-- If SOC already low, dock; else run mission -->
+  <ReactiveSequence name="energy_guard">
+    <IsBatteryLow min_battery="0.2" battery_topic="/battery_status"/>
+    <Dock dock_id="default_dock"/>
+  </ReactiveSequence>
+
+  <!-- Normal navigation -->
+  <NavigateToPose/>         <!-- or NavigateThroughPoses etc. -->
+</Fallback>
+

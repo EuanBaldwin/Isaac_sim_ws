@@ -8,12 +8,14 @@ install(DIRECTORY
   params
   maps
   rviz2
+#  behavior_trees
   DESTINATION share/${PROJECT_NAME})
 
 # install the Python tag_id_logger node
 install(
   PROGRAMS
     scripts/logger.py
+    scripts/battery_sim.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
