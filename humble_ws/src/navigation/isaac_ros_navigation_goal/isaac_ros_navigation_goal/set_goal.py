@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import rclpy
 from rclpy.action import ActionClient
 from rclpy.node import Node
@@ -128,7 +130,7 @@ class SetNavigationGoal(Node):
             self.get_logger().info("Sending initial pose")
             self.__send_initial_pose()
             self.__is_initial_pose_sent = True
-            time.sleep(10)
+            time.sleep(5)
             self.get_logger().info("Sending first goal")
 
         self._action_client.wait_for_server()

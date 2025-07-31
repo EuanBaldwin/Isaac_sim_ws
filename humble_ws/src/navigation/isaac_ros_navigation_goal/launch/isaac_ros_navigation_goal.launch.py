@@ -43,7 +43,8 @@ def generate_launch_description():
                 "goal_text_file_path": goal_text_file,
                 "initial_pose": [4.2, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0],
                 "dock_pose": [4.2, 0.0, 0.0, 0.0, 1.0, 0.0],
-                "battery_low_threshold": 0.20
+                "battery_low_threshold": 0.20,
+                "use_sim_time": True
             }
         ],
         output="screen",

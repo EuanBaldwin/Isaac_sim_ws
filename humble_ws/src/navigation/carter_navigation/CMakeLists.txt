@@ -11,7 +11,6 @@ install(DIRECTORY
 #  behavior_trees
   DESTINATION share/${PROJECT_NAME})
 
-# install the Python tag_id_logger node
 install(
   PROGRAMS
     scripts/logger.py

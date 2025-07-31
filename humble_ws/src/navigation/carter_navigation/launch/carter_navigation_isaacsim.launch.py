@@ -78,7 +78,7 @@ def generate_launch_description():
             print("Condition met, launching the second node.")
             
             # If Nav2 takes additional time to initialize, uncomment the lines below to add a delay of 10 seconds (or any desired duration) before launching the second_node_action
-            time.sleep(10)
+            time.sleep(5)
             return second_node_action
 
 
@@ -97,7 +97,7 @@ def generate_launch_description():
                 launch_arguments={
                     'version': '4.5.0',
                     'play_sim_on_start': 'true',
-                    'headless': 'webrtc',
+#                    'headless': 'webrtc',
                 }.items(),
             ),
             
