@@ -13,9 +13,9 @@ class BatterySim(Node):
     def __init__(self):
         super().__init__('battery_sim')
         
-        self.declare_parameter('capacity_wh', 200.0) # nominal capacity of the pack
-        self.declare_parameter('idle_w',      20.0) # W when robot just idles
-        self.declare_parameter('move_w',      80.0) # additional W when moving at 1 m/s
+        self.declare_parameter('capacity_wh', 1033.0) # nominal capacity of the pack
+        self.declare_parameter('idle_w',      95.0)   # W when robot just idles
+        self.declare_parameter('move_w',      30.0)  # additional W when moving at 1 m/s
         self.declare_parameter('dock_charged_topic', '/dock_charged')
         self.capacity_wh = self.get_parameter('capacity_wh').value
         self.idle_w      = self.get_parameter('idle_w').value

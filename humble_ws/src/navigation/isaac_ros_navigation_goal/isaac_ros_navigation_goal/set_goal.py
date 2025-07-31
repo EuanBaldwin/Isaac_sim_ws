@@ -32,7 +32,7 @@ class SetNavigationGoal(Node):
                 ("waypoint_topic", "/waypoint_reached"),
                 ("battery_status_topic", "/battery_status"),
                 ("battery_low_threshold", 0.2),
-                ("dock_pose", [0.0, 0.0, 0.0, 0.0, 0.0, 1.0]),
+                ("dock_pose", [4.2, 0.0, 0.0, 0.0, 1.0, 0.0]),
                 ("dock_charged_topic", "/dock_charged"),
             ],
         )
@@ -62,6 +62,7 @@ class SetNavigationGoal(Node):
         self._heading_to_dock = False
         self._dock_goal_id = None
         self._current_goal_handle = None
+        self._dock_reason = None
         
         dock_charged_topic = self.get_parameter("dock_charged_topic").value
         self._dock_charged_pub = self.create_publisher(EmptyMsg, dock_charged_topic, 1)
@@ -76,7 +77,9 @@ class SetNavigationGoal(Node):
             and percentage < self._battery_low_threshold
             and not self._heading_to_dock
         ):
+            self.get_logger().info(f"Battery low ({percentage*100:.1f} %), heading to dock")
             self._heading_to_dock = True
+            self._dock_reason = 'battery'
             if self._current_goal_handle:
                 self._current_goal_handle.cancel_goal_async().add_done_callback(
                     lambda _f: self.__send_dock_goal()
@@ -85,7 +88,6 @@ class SetNavigationGoal(Node):
                 self.__send_dock_goal()
 
     def __send_dock_goal(self):
-        self.get_logger().info("Battery low, sending dock goal")
         self._action_client.wait_for_server()
         g = NavigateToPose.Goal()
         g.pose.header.frame_id = self.get_parameter("frame_id").value
@@ -162,30 +164,31 @@ class SetNavigationGoal(Node):
             return
             
         if self._heading_to_dock and status == GoalStatus.STATUS_SUCCEEDED:
+            m = UInt32()
+            m.data = 0
+            self._waypoint_pub.publish(m)
             self._dock_charged_pub.publish(EmptyMsg())
             self.__reset_tag_logger_then(self.__shutdown)
             return
+            
+        self._waypoint_index += 1
 
         if status == GoalStatus.STATUS_SUCCEEDED:
             m = UInt32()
             m.data = self._waypoint_index
             self._waypoint_pub.publish(m)
-            self.get_logger().info(
-                f"Waypoint {self._waypoint_index} reached "
-                f"(published on {self._waypoint_pub.topic_name})"
-            )
         else:
             self.get_logger().warn(
                 f"Goal finished with status {status}; waypoint not logged"
             )
 
-        self._waypoint_index += 1
-
         if self.curr_iteration_count < self.MAX_ITERATION_COUNT:
             self.curr_iteration_count += 1
             self.send_goal()
         else:
-            self.__reset_tag_logger_then(self.__shutdown)
+            self._heading_to_dock = True
+            self._dock_reason = 'finish'
+            self.__send_dock_goal()
 
     def __feedback_callback(self, _):
         pass

@@ -16,6 +16,7 @@ from isaac_ros_apriltag_interfaces.msg import AprilTagDetectionArray
 from std_msgs.msg import UInt32
 from std_srvs.srv import Empty
 from nav2_msgs.msg import BehaviorTreeLog, BehaviorTreeStatusChange
+from sensor_msgs.msg import BatteryState
 
 LEAF_RECOVERIES: set[str] = {
     'Spin', 'BackUp', 'Wait',
@@ -45,40 +46,38 @@ class Logger(Node):
         self.run_dir.mkdir(parents=True, exist_ok=True)
         self.run_index = 0
         self.filepath = self.run_dir / f'run_{self.run_index}.csv'
-        self.filepath.write_text('sim_time,event,value\n')
+        self.filepath.write_text('sim_time,event,value,battery\n')
         self.declare_parameter('log_path', str(self.filepath))
 
         self.seen_ids: Set[int] = set()
         self._in_recovery = False
         self._last_status: dict[str, str] = {}
+        self._last_soc: float | None = None
 
-        # subscriber for AprilTag detections
+        # Subscribers
         self.create_subscription(
-            AprilTagDetectionArray,
-            '/tag_detections',
-            self.on_detections,
-            10,
-        )
-        
-        # subscriber for Waypoints
-        self.create_subscription(
-            UInt32,
-            '/waypoint_reached',
-            self._on_waypoint,
-            10,
+            AprilTagDetectionArray, '/tag_detections',
+            self.on_detections, 10,
         )
         
         self.create_subscription(
-            BehaviorTreeLog,
-            '/behavior_tree_log',
-            self._on_bt_log,
-            10,
+            UInt32, '/waypoint_reached',
+            self._on_waypoint, 10,
+        )
+        
+        self.create_subscription(
+            BehaviorTreeLog, '/behavior_tree_log',
+            self._on_bt_log, 10,
+        )
+        
+        self.create_subscription(
+            BatteryState, '/battery_status',
+            self._on_battery, 10,
         )
 
         # service that clears the seen‑ID cache
         self.create_service(Empty, 'reset_tag_id_log', self.on_reset)
         self.get_logger().info(f"{GREEN}Logging new tag IDs to {self.filepath}{RESET}")
-        self.get_logger().info(f"{GREEN}Call `ros2 service call /reset_tag_id_log std_srvs/srv/Empty` to reset the ID cache{RESET}")
 
     # helpers
     def _sim_now_str(self) -> str:
@@ -87,10 +86,14 @@ class Logger(Node):
         return f"{secs}.{nsecs:09d}"
 
     def _append_row(self, event: str, value: int | str) -> None:
+        soc_str = f'{self._last_soc:.6f}' if self._last_soc is not None else 'nan'
         with self.filepath.open('a') as f:
-            f.write(f'{self._sim_now_str()},{event},{value}\n')
+            f.write(f'{self._sim_now_str()},{event},{value},{soc_str}\n')
 
     # callbacks
+    def _on_battery(self, msg: BatteryState) -> None:
+        self._last_soc = msg.percentage
+
     def on_detections(self, msg: AprilTagDetectionArray) -> None:
         for det in msg.detections:
             tag_id = det.id[0] if hasattr(det.id, '__iter__') else det.id
@@ -109,7 +112,7 @@ class Logger(Node):
         for ev in msg.event_log:
             name, prev, curr = ev.node_name, ev.previous_status, ev.current_status
 
-            if name not in LEAF_RECOVERIES:
+            if name not in LEAF_RECOVERIES and not name.startswith('Clear'):
                 continue
 
             last = self._last_status.get(name)
@@ -123,6 +126,10 @@ class Logger(Node):
             elif last == 'RUNNING' and curr in {'SUCCESS', 'FAILURE', 'IDLE'}:
                 self._append_row('recovery_exit',  name)
                 self.get_logger().info(f'{GREEN}Exited  recovery: {name}{RESET}')
+            elif last in {None, 'IDLE'} and curr in {'SUCCESS', 'FAILURE'}:
+                self._append_row('recovery_enter', name)
+                self._append_row('recovery_exit',  name)
+                self.get_logger().info(f'{GREEN}Instant recovery: {name}{RESET}')
 
     def on_reset(self, req: Empty.Request, res: Empty.Response) -> Empty.Response:
         self.get_logger().info(f"{GREEN}Reset request received – clearing seen‑ID cache{RESET}")

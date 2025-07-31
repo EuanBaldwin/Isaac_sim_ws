@@ -58,19 +58,8 @@ def generate_launch_description():
         output="screen",
         parameters=[{
             'use_sim_time': use_sim_time,
-            'capacity_wh': 3.0,
-            'idle_w': 50.0,
-            'move_w': 300.0
+            'capacity_wh': 8.0
         }]
-    )
-    
-    docking_server = Node(
-    	package="opennav_docking",
-    	executable="opennav_docking",
-    	name="docking_server",
-    	output="screen",
-    	parameters=[docking_params,
-        	{'use_sim_time': use_sim_time}],
     )
 
     ld_automatic_goal = IncludeLaunchDescription(
@@ -89,7 +78,7 @@ def generate_launch_description():
             print("Condition met, launching the second node.")
             
             # If Nav2 takes additional time to initialize, uncomment the lines below to add a delay of 10 seconds (or any desired duration) before launching the second_node_action
-            time.sleep(15)
+            time.sleep(10)
             return second_node_action
 
 
@@ -108,8 +97,7 @@ def generate_launch_description():
                 launch_arguments={
                     'version': '4.5.0',
                     'play_sim_on_start': 'true',
-#                    'gui': LaunchConfiguration('gui')
-#                    'headless': '',
+                    'headless': 'webrtc',
                 }.items(),
             ),
             
@@ -156,6 +144,5 @@ def generate_launch_description():
             ld_apriltag,
             logger_node,
             battery_node,
-            #docking_server,
         ]
     )
