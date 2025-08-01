@@ -97,8 +97,8 @@ def generate_launch_description():
                 launch_arguments={
                     'version': '4.5.0',
                     'play_sim_on_start': 'true',
-                    'headless': 'native',
-                    'custom_args': '--no-window',
+#                    'headless': 'native',
+#                    'custom_args': '--no-window',
                 }.items(),
             ),
             
