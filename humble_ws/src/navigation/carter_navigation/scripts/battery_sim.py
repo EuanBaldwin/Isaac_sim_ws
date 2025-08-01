@@ -39,7 +39,7 @@ class BatterySim(Node):
         self.create_subscription(EmptyMsg, dock_topic, self.dock_cb, 1)
 
         self.last_t = self.get_clock().now()
-        self.timer = self.create_timer(1.0, self.step)
+        self.timer = self.create_timer(0.1, self.step)
 
     def odom_cb(self, msg):
         self.v = math.hypot(msg.twist.twist.linear.x, msg.twist.twist.linear.y)

@@ -38,16 +38,17 @@ class Logger(Node):
         launch_ts = datetime.now().strftime('%Y%m%d_%H%M%S')
         self.run_dir = workspace_root / 'data_log' / launch_ts
         self.run_dir.mkdir(parents=True, exist_ok=True)
-        self.run_index = 0
+        self.run_index = 1
         self.filepath = self.run_dir / f'run_{self.run_index}.csv'
         
         self.seen_ids: Set[int] = set()
         self._in_recovery = False
         self._last_status: dict[str, str] = {}
         self._last_soc: float | None = None
+        self._awaiting_run_started = True
         
         self.filepath.write_text('sim_time,event,value,soc\n')
-        self._append_row('run_started', self.run_index)
+#        self._append_row('run_started', self.run_index)
         self.declare_parameter('log_path', str(self.filepath))
 
         # Subscribers
@@ -95,6 +96,9 @@ class Logger(Node):
     # callbacks
     def _on_battery(self, msg: BatteryState) -> None:
         self._last_soc = msg.percentage
+        if self._awaiting_run_started:
+            self._append_row('run_started', self.run_index)
+            self._awaiting_run_started = False
 
     def on_detections(self, msg: AprilTagDetectionArray) -> None:
         for det in msg.detections:
@@ -137,10 +141,11 @@ class Logger(Node):
         self.get_logger().info(f"{GREEN}Reset request received – clearing seen‑ID cache{RESET}")
         self._append_row('run_ended', self.run_index)
         self.seen_ids.clear()
+        self._last_soc = None
+        self._awaiting_run_started = True
         self.run_index += 1
         self.filepath = self.run_dir / f'run_{self.run_index}.csv'
         self.filepath.write_text('sim_time,event,value,soc\n')
-        self._append_row('run_started', self.run_index)
         self.get_logger().info(f"{GREEN}Now logging to {self.filepath}{RESET}")
         return res
 
