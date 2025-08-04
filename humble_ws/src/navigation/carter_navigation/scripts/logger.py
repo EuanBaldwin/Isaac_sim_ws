@@ -16,6 +16,7 @@ from std_msgs.msg import UInt32
 from std_srvs.srv import Empty
 from nav2_msgs.msg import BehaviorTreeLog, BehaviorTreeStatusChange
 from sensor_msgs.msg import BatteryState
+from std_msgs.msg import String
 
 
 GREEN  = "\033[1;32m"
@@ -71,6 +72,11 @@ class Logger(Node):
             BatteryState, '/battery_status',
             self._on_battery, 10,
         )
+        
+        self.create_subscription(
+            String, '/dock_reason',
+            self._on_dock_reason, 10,
+        )
 
         # service that clears the seen‑ID cache
         self.create_service(Empty, 'reset_tag_id_log', self.on_reset)
@@ -114,6 +120,10 @@ class Logger(Node):
         self._append_row('waypoint', msg.data)
         self.get_logger().info(f"{GREEN}Waypoint {msg.data} saved{RESET}")
         
+    def _on_dock_reason(self, msg: String) -> None:
+        self._append_row('dock', msg.data)
+        self.get_logger().info(f"{GREEN}Dock event ({msg.data}) saved{RESET}")
+
     def _on_bt_log(self, msg: BehaviorTreeLog) -> None:
         for ev in msg.event_log:
             name, prev, curr = ev.node_name, ev.previous_status, ev.current_status

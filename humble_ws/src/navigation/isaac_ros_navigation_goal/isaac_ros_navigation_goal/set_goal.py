@@ -14,6 +14,7 @@ import time
 from std_msgs.msg import UInt32
 from action_msgs.msg import GoalStatus
 from sensor_msgs.msg import BatteryState
+from std_msgs.msg import String
 
 
 class SetNavigationGoal(Node):
@@ -34,8 +35,9 @@ class SetNavigationGoal(Node):
                 ("waypoint_topic", "/waypoint_reached"),
                 ("battery_status_topic", "/battery_status"),
                 ("battery_low_threshold", 0.2),
-                ("dock_pose", [4.2, 0.0, 0.0, 0.0, 1.0, 0.0]),
+                ("dock_pose", [4.5, 0.0, 0.0, 0.0, 0.0, 1.0]),
                 ("dock_charged_topic", "/dock_charged"),
+                ("dock_reason_topic", "/dock_reason"),
             ],
         )
 
@@ -68,6 +70,9 @@ class SetNavigationGoal(Node):
         
         dock_charged_topic = self.get_parameter("dock_charged_topic").value
         self._dock_charged_pub = self.create_publisher(EmptyMsg, dock_charged_topic, 1)
+        
+        dock_reason_topic = self.get_parameter("dock_reason_topic").value
+        self._dock_reason_pub = self.create_publisher(String, dock_reason_topic, 10)
 
         battery_topic = self.get_parameter("battery_status_topic").value
         self.create_subscription(BatteryState, battery_topic, self.__battery_callback, 10)
@@ -81,7 +86,7 @@ class SetNavigationGoal(Node):
         ):
             self.get_logger().info(f"Battery low ({percentage*100:.1f} %), heading to dock")
             self._heading_to_dock = True
-            self._dock_reason = 'battery'
+            self._dock_reason = 'low_soc'
             if self._current_goal_handle:
                 self._current_goal_handle.cancel_goal_async().add_done_callback(
                     lambda _f: self.__send_dock_goal()
@@ -89,8 +94,17 @@ class SetNavigationGoal(Node):
             else:
                 self.__send_dock_goal()
 
+    def __publish_dock_reason(self):
+        if self._dock_reason is None:
+            return
+        msg = String()
+        msg.data = self._dock_reason
+        self._dock_reason_pub.publish(msg)
+
+
     def __send_dock_goal(self):
         self._action_client.wait_for_server()
+        self.__publish_dock_reason()
         g = NavigateToPose.Goal()
         g.pose.header.frame_id = self.get_parameter("frame_id").value
         g.pose.header.stamp = self.get_clock().now().to_msg()
@@ -189,7 +203,7 @@ class SetNavigationGoal(Node):
             self.send_goal()
         else:
             self._heading_to_dock = True
-            self._dock_reason = 'finish'
+            self._dock_reason = 'patrol_done'
             self.__send_dock_goal()
 
     def __feedback_callback(self, _):

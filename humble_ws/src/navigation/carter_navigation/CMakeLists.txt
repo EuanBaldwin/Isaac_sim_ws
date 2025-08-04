@@ -15,6 +15,7 @@ install(
   PROGRAMS
     scripts/logger.py
     scripts/battery_sim.py
+    scripts/tag_gate.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

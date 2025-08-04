@@ -11,8 +11,10 @@ def generate_launch_description():
         plugin='nvidia::isaac_ros::apriltag::AprilTagNode',
         name='apriltag_detector',
         remappings=[
-            ('image', '/front_stereo_camera/left/image_raw'),
-            ('camera_info', '/front_stereo_camera/left/camera_info'),
+#            ('image', '/front_stereo_camera/left/image_raw'),
+#            ('camera_info', '/front_stereo_camera/left/camera_info'),
+            ('image',       '/apriltag_gate/image_raw'),
+            ('camera_info', '/apriltag_gate/camera_info'),
         ],
         parameters=[{
             'size': 0.25,

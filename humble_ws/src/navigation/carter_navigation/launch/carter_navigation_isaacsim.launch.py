@@ -61,6 +61,15 @@ def generate_launch_description():
             'capacity_wh': 8.0
         }]
     )
+    
+    tag_gate_node = Node(
+        package='carter_navigation',
+        executable='tag_gate.py',
+        name='tag_gate',
+        output='screen',
+        parameters=[{'use_sim_time': use_sim_time}],
+    )
+
 
     ld_automatic_goal = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(
@@ -142,6 +151,8 @@ def generate_launch_description():
                     on_stdout=lambda event: execute_second_node_if_condition_met(event, ld_automatic_goal)
                 )
             ),
+            
+            tag_gate_node,
             ld_apriltag,
             logger_node,
             battery_node,
