@@ -34,7 +34,7 @@ class SetNavigationGoal(Node):
                 ("initial_pose", rclpy.Parameter.Type.DOUBLE_ARRAY),
                 ("waypoint_topic", "/waypoint_reached"),
                 ("battery_status_topic", "/battery_status"),
-                ("battery_low_threshold", 0.2),
+                ("battery_low_threshold", 0.3),
                 ("dock_pose", [4.5, 0.0, 0.0, 0.0, 0.0, 1.0]),
                 ("dock_charged_topic", "/dock_charged"),
                 ("dock_reason_topic", "/dock_reason"),
@@ -67,15 +67,20 @@ class SetNavigationGoal(Node):
         self._dock_goal_id = None
         self._current_goal_handle = None
         self._dock_reason = None
-        
+        self._docking_requested = False
+
         dock_charged_topic = self.get_parameter("dock_charged_topic").value
         self._dock_charged_pub = self.create_publisher(EmptyMsg, dock_charged_topic, 1)
-        
+
         dock_reason_topic = self.get_parameter("dock_reason_topic").value
         self._dock_reason_pub = self.create_publisher(String, dock_reason_topic, 10)
 
         battery_topic = self.get_parameter("battery_status_topic").value
         self.create_subscription(BatteryState, battery_topic, self.__battery_callback, 10)
+
+    # ------------------------------------------------------
+    # Callbacks
+    # ------------------------------------------------------
 
     def __battery_callback(self, msg):
         percentage = getattr(msg, "percentage", None)
@@ -84,15 +89,89 @@ class SetNavigationGoal(Node):
             and percentage < self._battery_low_threshold
             and not self._heading_to_dock
         ):
-            self.get_logger().info(f"Battery low ({percentage*100:.1f} %), heading to dock")
+            self.get_logger().info(
+                f"Battery low ({percentage*100:.1f} %), heading to dock"
+            )
             self._heading_to_dock = True
-            self._dock_reason = 'low_soc'
+            if self._dock_reason is None:
+                self._dock_reason = "low_soc"
+
+            # cancel the current goal (if any) but do not wait for the cancel
             if self._current_goal_handle:
-                self._current_goal_handle.cancel_goal_async().add_done_callback(
-                    lambda _f: self.__send_dock_goal()
-                )
-            else:
+                self._current_goal_handle.cancel_goal_async()
+
+            # immediately request the dock goal – the old goal will be pre‑empted
+            self.__send_dock_goal()
+
+    def __goal_response_callback(self, future):
+        gh = future.result()
+        if not gh.accepted:
+            self.get_logger().info("Goal rejected :(")
+            if not self._heading_to_dock:
+                self.__shutdown()
+            return
+
+        self.get_logger().info("Goal accepted :)")
+        self._current_goal_handle = gh
+        if self._heading_to_dock and self._dock_goal_id is None:
+            self._dock_goal_id = gh.goal_id
+        gh.get_result_async().add_done_callback(
+            lambda f, h=gh: self.__get_result_callback(f, h)
+        )
+
+    def __get_result_callback(self, future, goal_handle):
+        status = future.result().status
+
+        # Ignore results from canceled/aborted waypoints once docking has started
+        if (
+            self._heading_to_dock
+            and status in (GoalStatus.STATUS_CANCELED, GoalStatus.STATUS_ABORTED)
+        ):
+            return
+
+        # Drop results that belong to a different goal after docking is in progress
+        if (
+            self._heading_to_dock
+            and self._dock_goal_id
+            and goal_handle.goal_id != self._dock_goal_id
+        ):
+            return
+
+        # Docking goal succeeded → publish final messages and shut down
+        if self._heading_to_dock and status == GoalStatus.STATUS_SUCCEEDED:
+            m = UInt32()
+            m.data = 0
+            self._waypoint_pub.publish(m)
+            self._dock_charged_pub.publish(EmptyMsg())
+            self.__reset_tag_logger_then(self.__shutdown)
+            return
+
+        # Waypoint goal finished (patrol mode)
+        self._waypoint_index += 1
+
+        if status == GoalStatus.STATUS_SUCCEEDED:
+            m = UInt32()
+            m.data = self._waypoint_index
+            self._waypoint_pub.publish(m)
+        else:
+            self.get_logger().warn(
+                f"Goal finished with status {status}; waypoint not logged"
+            )
+
+        # Decide whether to continue patrolling or dock because patrol is done
+        if self.curr_iteration_count < self.MAX_ITERATION_COUNT:
+            self.curr_iteration_count += 1
+            self.send_goal()
+        else:
+            if not self._heading_to_dock:
+                self._heading_to_dock = True
+                if self._dock_reason is None:
+                    self._dock_reason = "patrol_done"
                 self.__send_dock_goal()
+
+    # ------------------------------------------------------
+    # Helper methods
+    # ------------------------------------------------------
 
     def __publish_dock_reason(self):
         if self._dock_reason is None:
@@ -101,10 +180,14 @@ class SetNavigationGoal(Node):
         msg.data = self._dock_reason
         self._dock_reason_pub.publish(msg)
 
-
     def __send_dock_goal(self):
+        if self._docking_requested:
+            return
+        self._docking_requested = True
+
         self._action_client.wait_for_server()
         self.__publish_dock_reason()
+
         g = NavigateToPose.Goal()
         g.pose.header.frame_id = self.get_parameter("frame_id").value
         g.pose.header.stamp = self.get_clock().now().to_msg()
@@ -115,6 +198,7 @@ class SetNavigationGoal(Node):
         g.pose.pose.orientation.y = p[3]
         g.pose.pose.orientation.z = p[4]
         g.pose.pose.orientation.w = p[5]
+
         self._action_client.send_goal_async(
             g, feedback_callback=self.__feedback_callback
         ).add_done_callback(self.__goal_response_callback)
@@ -156,55 +240,6 @@ class SetNavigationGoal(Node):
         self._action_client.send_goal_async(
             g, feedback_callback=self.__feedback_callback
         ).add_done_callback(self.__goal_response_callback)
-
-    def __goal_response_callback(self, future):
-        gh = future.result()
-        if not gh.accepted:
-            self.get_logger().info("Goal rejected :(")
-            if not self._heading_to_dock:
-                self.__shutdown()
-            return
-
-        self.get_logger().info("Goal accepted :)")
-        self._current_goal_handle = gh
-        if self._heading_to_dock and self._dock_goal_id is None:
-            self._dock_goal_id = gh.goal_id
-        gh.get_result_async().add_done_callback(
-            lambda f, h=gh: self.__get_result_callback(f, h)
-        )
-
-    def __get_result_callback(self, future, goal_handle):
-        status = future.result().status
-
-        if self._heading_to_dock and self._dock_goal_id and goal_handle.goal_id != self._dock_goal_id:
-            return
-            
-        if self._heading_to_dock and status == GoalStatus.STATUS_SUCCEEDED:
-            m = UInt32()
-            m.data = 0
-            self._waypoint_pub.publish(m)
-            self._dock_charged_pub.publish(EmptyMsg())
-            self.__reset_tag_logger_then(self.__shutdown)
-            return
-            
-        self._waypoint_index += 1
-
-        if status == GoalStatus.STATUS_SUCCEEDED:
-            m = UInt32()
-            m.data = self._waypoint_index
-            self._waypoint_pub.publish(m)
-        else:
-            self.get_logger().warn(
-                f"Goal finished with status {status}; waypoint not logged"
-            )
-
-        if self.curr_iteration_count < self.MAX_ITERATION_COUNT:
-            self.curr_iteration_count += 1
-            self.send_goal()
-        else:
-            self._heading_to_dock = True
-            self._dock_reason = 'patrol_done'
-            self.__send_dock_goal()
 
     def __feedback_callback(self, _):
         pass

@@ -67,7 +67,10 @@ def generate_launch_description():
         executable='tag_gate.py',
         name='tag_gate',
         output='screen',
-        parameters=[{'use_sim_time': use_sim_time}],
+        parameters=[{
+            'use_sim_time': use_sim_time,
+            'active_duration': 2.0
+        }],
     )
 
 

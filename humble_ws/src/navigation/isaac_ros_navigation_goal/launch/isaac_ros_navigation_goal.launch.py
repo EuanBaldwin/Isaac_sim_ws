@@ -36,14 +36,14 @@ def generate_launch_description():
         parameters=[
             {
                 "map_yaml_path": map_yaml_file,
-                "iteration_count": 5,
+                "iteration_count": 6,
                 "goal_generator_type": "GoalReader",
                 "action_server_name": "navigate_to_pose",
                 "obstacle_search_distance_in_meters": 0.2,
                 "goal_text_file_path": goal_text_file,
                 "initial_pose": [4.5, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
                 "dock_pose": [4.5, 0.0, 0.0, 0.0, 0.0, 1.0],
-                "battery_low_threshold": 0.65,
+                "battery_low_threshold": 0.30,
                 "use_sim_time": True
             }
         ],
