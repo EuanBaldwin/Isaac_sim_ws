@@ -6,6 +6,7 @@ sim_time,event,value,soc
 1794.733426935,tag,2,0.785483
 1818.250094829,waypoint,3,0.689384
 1818.366761501,tag,3,0.689053
+1829.033428724,recovery,enter,0.642259
 1829.033428724,recovery_enter,ClearGlobalCostmap-Context,0.642259
 1829.033428724,recovery_exit,ClearGlobalCostmap-Context,0.642259
 1829.066762059,recovery_enter,ClearLocalCostmap-Context,0.642259
@@ -14,6 +15,7 @@ sim_time,event,value,soc
 1830.383428795,recovery_exit,Spin,0.637259
 1830.383428795,recovery_enter,Wait,0.637259
 1835.416762391,recovery_exit,Wait,0.620240
+1835.416762391,recovery,exit,0.620240
 1851.700096573,waypoint,4,0.555778
 1851.816763246,tag,4,0.555443
 1879.350098015,waypoint,5,0.441427

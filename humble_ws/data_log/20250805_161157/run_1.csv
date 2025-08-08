@@ -10,10 +10,12 @@ sim_time,event,value,soc
 102.333338670,tag,4,0.584104
 156.766674842,waypoint,5,0.353989
 156.833341512,tag,5,0.353655
+164.683341922,recovery,enter,0.318444
 164.683341922,recovery_enter,ClearGlobalCostmap-Context,0.318444
 164.683341922,recovery_exit,ClearGlobalCostmap-Context,0.318444
 164.733341924,recovery_enter,ClearLocalCostmap-Context,0.318015
 164.733341924,recovery_exit,ClearLocalCostmap-Context,0.318015
+164.733341924,recovery,exit,0.318015
 168.900008808,dock,low_soc,0.299879
 194.550010146,waypoint,0,0.195461
 194.550010146,run_ended,1,0.195461
