@@ -58,7 +58,7 @@ def generate_launch_description():
         output="screen",
         parameters=[{
             'use_sim_time': use_sim_time,
-            'capacity_wh': 8.0
+            'capacity_wh': 6.75  # was 8.0
         }]
     )
     
