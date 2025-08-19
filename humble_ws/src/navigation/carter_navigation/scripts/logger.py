@@ -146,6 +146,8 @@ class Logger(Node):
         if self._awaiting_run_started:
             self._append_row('run_started', self.run_index)
             self._awaiting_run_started = False
+        if msg.percentage <= 0.0 and prev_soc is not None:
+            self._append_row('run_ended', self.run_index)
 
     def on_detections(self, msg: AprilTagDetectionArray) -> None:
         for det in msg.detections:
