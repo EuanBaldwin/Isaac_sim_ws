@@ -8,19 +8,19 @@ When cloning this repository, both workspaces are downloaded. Depending on which
 
 Clone this repository:
 
-'''bash
+```bash
 git clone https://github.com/EuanBaldwin/Isaac_sim_ws.git
-'''
+```
 
 The Nova Carter Navigation simulation packages are defined only for `humble_ws`. 
 
 To build and launch the simulation:
 
-'''bash
+```bash
 cd humble_ws
 colcon build
 source install/setup.bash
 ros2 launch carter_navigation carter_navigation_isaacsim.launch.py
-'''
+```
 
 Simulation logs can be found at 'humble_ws/data_log'.
