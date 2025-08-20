@@ -67,6 +67,7 @@ class SetNavigationGoal(Node):
         self._dock_goal_id = None
         self._current_goal_handle = None
         self._dock_reason = None
+        self._pending_dock_reason = None
         self._docking_requested = False
 
         dock_charged_topic = self.get_parameter("dock_charged_topic").value
@@ -78,10 +79,7 @@ class SetNavigationGoal(Node):
         battery_topic = self.get_parameter("battery_status_topic").value
         self.create_subscription(BatteryState, battery_topic, self.__battery_callback, 10)
 
-    # ------------------------------------------------------
     # Callbacks
-    # ------------------------------------------------------
-
     def __battery_callback(self, msg):
         percentage = getattr(msg, "percentage", None)
         if (
@@ -93,8 +91,8 @@ class SetNavigationGoal(Node):
                 f"Battery low ({percentage*100:.1f} %), heading to dock"
             )
             self._heading_to_dock = True
-            if self._dock_reason is None:
-                self._dock_reason = "low_soc"
+            if self._pending_dock_reason is None:
+                self._pending_dock_reason = "low_soc"
 
             # cancel the current goal (if any) but do not wait for the cancel
             if self._current_goal_handle:
@@ -115,6 +113,9 @@ class SetNavigationGoal(Node):
         self._current_goal_handle = gh
         if self._heading_to_dock and self._dock_goal_id is None:
             self._dock_goal_id = gh.goal_id
+            if self._dock_reason is None:
+                self._dock_reason = self._pending_dock_reason
+                self.__publish_dock_reason()
         gh.get_result_async().add_done_callback(
             lambda f, h=gh: self.__get_result_callback(f, h)
         )
@@ -165,14 +166,11 @@ class SetNavigationGoal(Node):
         else:
             if not self._heading_to_dock:
                 self._heading_to_dock = True
-                if self._dock_reason is None:
-                    self._dock_reason = "patrol_done"
+                if self._pending_dock_reason is None:
+                    self._pending_dock_reason = "patrol_done"
                 self.__send_dock_goal()
 
-    # ------------------------------------------------------
     # Helper methods
-    # ------------------------------------------------------
-
     def __publish_dock_reason(self):
         if self._dock_reason is None:
             return
@@ -186,7 +184,6 @@ class SetNavigationGoal(Node):
         self._docking_requested = True
 
         self._action_client.wait_for_server()
-        self.__publish_dock_reason()
 
         g = NavigateToPose.Goal()
         g.pose.header.frame_id = self.get_parameter("frame_id").value
