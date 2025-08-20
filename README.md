@@ -23,4 +23,4 @@ source install/setup.bash
 ros2 launch carter_navigation carter_navigation_isaacsim.launch.py
 ```
 
-Simulation logs can be found at 'humble_ws/data_log'.
+Simulation logs can be found at `humble_ws/data_log`.
